@@ -21,7 +21,7 @@ extend-exclude = '''
 
 [tool.ruff]
 exclude = [
-  "*/__init__.py"
+  "*/__init__.py",
 ]
 line-length = 120
 
