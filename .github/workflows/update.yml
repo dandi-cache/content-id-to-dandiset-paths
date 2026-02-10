@@ -1,0 +1,38 @@
+name: Update cache
+
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+env:
+  GITHUB_TOKEN: ${{ secrets._GITHUB_API_KEY }}
+
+jobs:
+  UpdateCache:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        run: git clone https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/bids-dandisets/dashboard.git
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.13
+
+      - name: Run dashboard update
+        run: |
+          pip install s5cmd PyYaml
+          s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata
+          cd content-id-to-dandiset-paths
+          python content_id_to_dandiset_paths/update.py
+
+      - name: Upload changes
+        run: |
+          cd content-id-to-dandiset-paths
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit --message "update" || true  # || true in case of no changes
+          git push
