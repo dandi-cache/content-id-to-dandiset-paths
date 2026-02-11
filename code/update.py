@@ -30,7 +30,7 @@ def _run(base_directory: pathlib.Path, /) -> None:
         message = (
             f"\nNo asset files found in `{base_directory / 'sourcedata'}`.\n"
             "Please navigate to the top-level directory (`content-id-to-dandiset-paths`) and run: \n\n"
-            '\ts5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata`\n\n'
+            '\ts5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata\n\n'
         )
         raise RuntimeError(message)
 

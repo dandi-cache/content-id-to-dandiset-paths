@@ -24,14 +24,13 @@ jobs:
       - name: Run
         run: |
           pip install s5cmd PyYaml
-          s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata || true
 
           cd content-id-to-dandiset-paths
+          s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata || true
           python code/update.py
 
       - name: Upload
         run: |
-          cd content-id-to-dandiset-paths
           git config --local user.name "github-actions[bot]"
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add .
