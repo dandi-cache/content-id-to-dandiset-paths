@@ -24,35 +24,31 @@ jobs:
 
       - name: Run update
         run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
           pip install s5cmd PyYaml
 
           s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" "$REPO_DIR/sourcedata" || true
-          python code/update.py
+          python $REPO_DIR/code/update.py
 
       - name: Upload YAML
         run: |
-          cd $REPO_DIR
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add .
-          git commit --message "update" || true  # || true in case of no changes
-          git push
+          git -C $REPO_DIR add .
+          git -C $REPO_DIR commit --message "update" || true  # || true in case of no changes
+          git -C $REPO_DIR push
 
       - name: Run minification
-        run: |
-          cd $REPO_DIR
-          python code/minify.py
+        run: python $REPO_DIR/code/minify.py
 
       - name: Upload minification
         run: |
           git push origin --delete min
 
-          cd $REPO_DIR
-
-          git checkout -b min
-          git add .
-          git commit --message "update min" || true  # || true in case of no changes
-          git push --set-upstream origin min
+          git -C $REPO_DIR checkout -b min
+          git -C $REPO_DIR add .
+          git -C $REPO_DIR commit --message "update min" || true  # || true in case of no changes
+          git -C $REPO_DIR push --set-upstream origin min
 
   NotifyOnFailure:
     runs-on: ubuntu-latest
