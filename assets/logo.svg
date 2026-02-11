@@ -1,20 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- DANDI Cache Logo - Combining DANDI Archive brain with cache elements -->
-<svg version="1.1" id="cache_logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<!-- DANDI Cache Logo - Cache-focused with DANDI brain integrated -->
+<svg version="1.0" id="cache_logo" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 1000 1000" style="enable-background:new 0 0 1000 1000;" xml:space="preserve">
 <style type="text/css">
-	.brain-light{fill:#F0A5AC;}
-	.brain-med{fill:#D3868D;}
-	.brain-dark{fill:#A05A60;}
 	.cache-primary{fill:#00436D;}
 	.cache-secondary{fill:#4A90A4;}
 	.cache-accent{fill:#6BB6CC;}
 	.cache-light{fill:#A8D5E2;}
+	.brain-light{fill:#F0A5AC;}
+	.brain-med{fill:#D3868D;}
+	.brain-dark{fill:#A05A60;}
 </style>
 
-<!-- DANDI Brain Icon (scaled and centered) -->
-<!-- Transform: translate(200, 200) centers the brain origin, scale(0.45) sizes it to fit within the cache ring -->
-<g id="brain-icon" transform="translate(200, 200) scale(0.45)">
+<!-- Main Cache Database Cylinders (3 stacked containers) -->
+<g id="cache-storage">
+	<!-- Bottom cylinder -->
+	<g id="cylinder-bottom">
+		<ellipse class="cache-secondary" cx="500" cy="700" rx="200" ry="60"/>
+		<rect class="cache-primary" x="300" y="640" width="400" height="60"/>
+		<ellipse class="cache-secondary" cx="500" cy="640" rx="200" ry="60"/>
+	</g>
+	
+	<!-- Middle cylinder -->
+	<g id="cylinder-middle">
+		<ellipse class="cache-secondary" cx="500" cy="540" rx="200" ry="60"/>
+		<rect class="cache-primary" x="300" y="480" width="400" height="60"/>
+		<ellipse class="cache-secondary" cx="500" cy="480" rx="200" ry="60"/>
+	</g>
+	
+	<!-- Top cylinder (with DANDI brain inside) -->
+	<g id="cylinder-top">
+		<ellipse class="cache-secondary" cx="500" cy="380" rx="200" ry="60"/>
+		<rect class="cache-primary" x="300" y="320" width="400" height="60"/>
+		<ellipse class="cache-secondary" cx="500" cy="320" rx="200" ry="60"/>
+	</g>
+	
+	<!-- Horizontal lines showing data layers -->
+	<line class="cache-accent" x1="300" y1="350" x2="700" y2="350" style="stroke:#6BB6CC;stroke-width:2;opacity:0.7"/>
+	<line class="cache-accent" x1="300" y1="510" x2="700" y2="510" style="stroke:#6BB6CC;stroke-width:2;opacity:0.7"/>
+	<line class="cache-accent" x1="300" y1="670" x2="700" y2="670" style="stroke:#6BB6CC;stroke-width:2;opacity:0.7"/>
+</g>
+
+<!-- DANDI Brain (integrated into top cylinder as branded content) -->
+<g id="dandi-brand" transform="translate(350, 280) scale(0.13)">
 	<polygon class="brain-med" points="641.1,162.5 774.5,40.4 922.4,162.5 1058.1,227.2 1142.1,457.4 1119.8,596.9
 		951.7,664.8 844.1,536.5 647.5,235.3 "/>
 	<path class="brain-light" d="M422.6,67.3c90,0,174.3,32.4,199.7,115.4c58.2-4.8,137.9,80.5,137.9,161.3
@@ -56,88 +84,84 @@
 		/>
 </g>
 
-<!-- Cache Network Ring (surrounding brain) -->
-<g id="cache-network">
-	<!-- Outer ring segments indicating cache layers -->
-	<path class="cache-secondary" d="M500,100 A400,400 0 0,1 900,500" style="fill:none;stroke:#4A90A4;stroke-width:25;opacity:0.7"/>
-	<path class="cache-secondary" d="M900,500 A400,400 0 0,1 500,900" style="fill:none;stroke:#4A90A4;stroke-width:25;opacity:0.7"/>
-	<path class="cache-secondary" d="M500,900 A400,400 0 0,1 100,500" style="fill:none;stroke:#4A90A4;stroke-width:25;opacity:0.7"/>
-	<path class="cache-secondary" d="M100,500 A400,400 0 0,1 500,100" style="fill:none;stroke:#4A90A4;stroke-width:25;opacity:0.7"/>
-	
-	<!-- Cache nodes at cardinal points -->
-	<!-- Top node -->
-	<g transform="translate(500, 75)">
-		<circle class="cache-light" cx="0" cy="0" r="28"/>
-		<circle class="cache-secondary" cx="0" cy="0" r="18"/>
-		<circle class="cache-primary" cx="0" cy="0" r="10"/>
+<!-- Large Hash Symbols (key-value cache indicators) -->
+<g id="hash-symbols" class="cache-accent">
+	<!-- Left hash -->
+	<g transform="translate(160, 470)">
+		<rect x="15" y="0" width="14" height="100" rx="3"/>
+		<rect x="71" y="0" width="14" height="100" rx="3"/>
+		<rect x="0" y="28" width="100" height="14" rx="3"/>
+		<rect x="0" y="58" width="100" height="14" rx="3"/>
 	</g>
 	
-	<!-- Right node -->
-	<g transform="translate(925, 500)">
-		<circle class="cache-light" cx="0" cy="0" r="28"/>
-		<circle class="cache-secondary" cx="0" cy="0" r="18"/>
-		<circle class="cache-primary" cx="0" cy="0" r="10"/>
-	</g>
-	
-	<!-- Bottom node -->
-	<g transform="translate(500, 925)">
-		<circle class="cache-light" cx="0" cy="0" r="28"/>
-		<circle class="cache-secondary" cx="0" cy="0" r="18"/>
-		<circle class="cache-primary" cx="0" cy="0" r="10"/>
-	</g>
-	
-	<!-- Left node -->
-	<g transform="translate(75, 500)">
-		<circle class="cache-light" cx="0" cy="0" r="28"/>
-		<circle class="cache-secondary" cx="0" cy="0" r="18"/>
-		<circle class="cache-primary" cx="0" cy="0" r="10"/>
-	</g>
-	
-	<!-- Hash symbols in corners (key-value cache indicators) -->
-	<g class="cache-accent" style="opacity:0.6">
-		<!-- Top-right corner hash -->
-		<g transform="translate(750, 250)">
-			<rect x="5" y="0" width="6" height="40" rx="1"/>
-			<rect x="29" y="0" width="6" height="40" rx="1"/>
-			<rect x="0" y="11" width="40" height="6" rx="1"/>
-			<rect x="0" y="23" width="40" height="6" rx="1"/>
-		</g>
-		
-		<!-- Bottom-right corner hash -->
-		<g transform="translate(750, 710)">
-			<rect x="5" y="0" width="6" height="40" rx="1"/>
-			<rect x="29" y="0" width="6" height="40" rx="1"/>
-			<rect x="0" y="11" width="40" height="6" rx="1"/>
-			<rect x="0" y="23" width="40" height="6" rx="1"/>
-		</g>
-		
-		<!-- Bottom-left corner hash -->
-		<g transform="translate(210, 710)">
-			<rect x="5" y="0" width="6" height="40" rx="1"/>
-			<rect x="29" y="0" width="6" height="40" rx="1"/>
-			<rect x="0" y="11" width="40" height="6" rx="1"/>
-			<rect x="0" y="23" width="40" height="6" rx="1"/>
-		</g>
-		
-		<!-- Top-left corner hash -->
-		<g transform="translate(210, 250)">
-			<rect x="5" y="0" width="6" height="40" rx="1"/>
-			<rect x="29" y="0" width="6" height="40" rx="1"/>
-			<rect x="0" y="11" width="40" height="6" rx="1"/>
-			<rect x="0" y="23" width="40" height="6" rx="1"/>
-		</g>
+	<!-- Right hash -->
+	<g transform="translate(740, 470)">
+		<rect x="15" y="0" width="14" height="100" rx="3"/>
+		<rect x="71" y="0" width="14" height="100" rx="3"/>
+		<rect x="0" y="28" width="100" height="14" rx="3"/>
+		<rect x="0" y="58" width="100" height="14" rx="3"/>
 	</g>
 </g>
 
-<!-- Data flow indicators (subtle arrows) -->
-<g id="data-flow" class="cache-accent" style="opacity:0.5">
-	<!-- Top arrow -->
-	<path d="M500,150 L500,140 L510,150 L490,150 Z"/>
-	<!-- Right arrow -->
-	<path d="M850,500 L860,500 L850,510 L850,490 Z"/>
-	<!-- Bottom arrow -->
-	<path d="M500,850 L500,860 L490,850 L510,850 Z"/>
-	<!-- Left arrow -->
-	<path d="M150,500 L140,500 L150,490 L150,510 Z"/>
+<!-- Network nodes and connections (cache access points) -->
+<g id="network-nodes">
+	<!-- Top-left node -->
+	<g transform="translate(200, 200)">
+		<circle class="cache-light" cx="0" cy="0" r="35"/>
+		<circle class="cache-secondary" cx="0" cy="0" r="25"/>
+		<circle class="cache-primary" cx="0" cy="0" r="15"/>
+		<line class="cache-secondary" x1="25" y1="25" x2="140" y2="140" style="stroke:#4A90A4;stroke-width:4;opacity:0.6"/>
+	</g>
+	
+	<!-- Top-right node -->
+	<g transform="translate(800, 200)">
+		<circle class="cache-light" cx="0" cy="0" r="35"/>
+		<circle class="cache-secondary" cx="0" cy="0" r="25"/>
+		<circle class="cache-primary" cx="0" cy="0" r="15"/>
+		<line class="cache-secondary" x1="-25" y1="25" x2="-140" y2="140" style="stroke:#4A90A4;stroke-width:4;opacity:0.6"/>
+	</g>
+	
+	<!-- Bottom-left node -->
+	<g transform="translate(200, 800)">
+		<circle class="cache-light" cx="0" cy="0" r="35"/>
+		<circle class="cache-secondary" cx="0" cy="0" r="25"/>
+		<circle class="cache-primary" cx="0" cy="0" r="15"/>
+		<line class="cache-secondary" x1="25" y1="-25" x2="140" y2="-140" style="stroke:#4A90A4;stroke-width:4;opacity:0.6"/>
+	</g>
+	
+	<!-- Bottom-right node -->
+	<g transform="translate(800, 800)">
+		<circle class="cache-light" cx="0" cy="0" r="35"/>
+		<circle class="cache-secondary" cx="0" cy="0" r="25"/>
+		<circle class="cache-primary" cx="0" cy="0" r="15"/>
+		<line class="cache-secondary" x1="-25" y1="-25" x2="-140" y2="-140" style="stroke:#4A90A4;stroke-width:4;opacity:0.6"/>
+	</g>
+</g>
+
+<!-- Data flow arrows -->
+<g id="data-flow" class="cache-accent" style="opacity:0.7">
+	<!-- Arrows pointing to cache -->
+	<path d="M240,220 L250,210 L260,220 L250,210 L250,230 Z"/>
+	<path d="M760,220 L750,210 L740,220 L750,210 L750,230 Z"/>
+	<path d="M240,780 L250,790 L260,780 L250,790 L250,770 Z"/>
+	<path d="M760,780 L750,790 L740,780 L750,790 L750,770 Z"/>
+</g>
+
+<!-- Cache entry indicators (small blocks on cylinders) -->
+<g id="cache-entries" class="cache-light" style="opacity:0.5">
+	<rect x="320" y="335" width="60" height="10" rx="2"/>
+	<rect x="620" y="335" width="60" height="10" rx="2"/>
+	<rect x="320" y="365" width="60" height="10" rx="2"/>
+	<rect x="620" y="365" width="60" height="10" rx="2"/>
+	
+	<rect x="320" y="495" width="60" height="10" rx="2"/>
+	<rect x="620" y="495" width="60" height="10" rx="2"/>
+	<rect x="320" y="525" width="60" height="10" rx="2"/>
+	<rect x="620" y="525" width="60" height="10" rx="2"/>
+	
+	<rect x="320" y="655" width="60" height="10" rx="2"/>
+	<rect x="620" y="655" width="60" height="10" rx="2"/>
+	<rect x="320" y="685" width="60" height="10" rx="2"/>
+	<rect x="620" y="685" width="60" height="10" rx="2"/>
 </g>
 </svg>
