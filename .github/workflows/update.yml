@@ -7,7 +7,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets._GITHUB_API_KEY }}
-  REPO_DIR_NAME: content-id-to-dandiset-paths
+  REPO_DIR_NAME: ${{ github.event.repository.name }}
 
 jobs:
   Update:
