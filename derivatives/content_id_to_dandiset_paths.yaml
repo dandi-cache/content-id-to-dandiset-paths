@@ -1,1 +1,564 @@
-test
+005caa98-6456-42cd-8819-d5ee42398c89:
+  '000004':
+  - sub-P39CS/sub-P39CS_ses-20150801_obj-14vknkz_ecephys+image.nwb
+005e4677-c6db-42b6-97a5-0ee19c519532:
+  '000004':
+  - sub-P14HMH/sub-P14HMH_ses-20070601_obj-1t8wrd5_ecephys+image.nwb
+00fcde39-468d-4440-9bf3-56aaac0e37a7:
+  '000003':
+  - sub-YutaMouse44/sub-YutaMouse44_ses-YutaMouse44-151130_behavior+ecephys.nwb
+02face5a-8d28-48f0-b0c6-16913e6edbdf:
+  '000003':
+  - sub-YutaMouse39/sub-YutaMouse39_ses-YutaMouse39-150731_behavior+ecephys.nwb
+03c0fa68-5e70-4f69-9e45-18046fe9a69d:
+  '000003':
+  - sub-YutaMouse37/sub-YutaMouse37_ses-YutaMouse37-150612_behavior+ecephys.nwb
+03ccc46f-6aaf-4b42-b893-d9979c51bae3:
+  '000004':
+  - sub-P23HMH/sub-P23HMH_ses-20090201_obj-1tm3w39_ecephys+image.nwb
+04d2de11-0a29-44d8-bd29-d2047be47e87:
+  '000004':
+  - sub-P60CS/sub-P60CS_ses-20181001_ecephys+image.nwb
+05575956-fc55-4dc2-9c3f-d01b40a9521b:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160910_behavior+ecephys.nwb
+06cfc393-58ae-4031-b058-26456357aa6f:
+  '000004':
+  - sub-P43CS/sub-P43CS_ses-20161101_ecephys+image.nwb
+08fcef0e-bc73-43b9-9b14-87d1845e79c1:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150901_behavior+ecephys.nwb
+0c0f26c0-1e5c-4e67-9d0b-45ce40704a46:
+  '000004':
+  - sub-P15HMH/sub-P15HMH_ses-20070901_obj-a5xz9n_ecephys+image.nwb
+0d7b971e-c9e3-48ad-a23a-eaf0f2fd612c:
+  '000004':
+  - sub-P54CS/sub-P54CS_ses-20180101_obj-1ukzk61_ecephys+image.nwb
+0e00e712-d6fb-4768-92e9-a31242775517:
+  '000003':
+  - sub-YutaMouse44/sub-YutaMouse44_ses-YutaMouse44-151129_behavior+ecephys.nwb
+0f933c74-115c-4436-8227-e634da3205e2:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151116_behavior+ecephys.nwb
+15a56f01-55c3-478a-95b9-b469cf2d258c:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160906_ecephys.nwb
+18b9a7e7-cdef-4c11-9944-702546a14eaa:
+  '000003':
+  - sub-YutaMouse37/sub-YutaMouse37_ses-YutaMouse37-150610_behavior+ecephys.nwb
+18f2997b-ebf9-4bd5-8091-6f9d02844530:
+  '000004':
+  - sub-P40CS/sub-P40CS_ses-20160101_ecephys+image.nwb
+19075630-81f1-436c-8dd9-bd862e1965f8:
+  '000004':
+  - sub-P51HMH/sub-P51HMH_ses-20160201_obj-14ikvd2_ecephys+image.nwb
+191a42b2-1245-45ee-b664-1ff160a01ba9:
+  '000003':
+  - sub-YutaMouse20/sub-YutaMouse20_ses-YutaMouse20-140328_behavior+ecephys.nwb
+1940ec16-623f-4fd8-90c3-abf3fc1f4ca8:
+  '000004':
+  - sub-P9HMH/sub-P9HMH_ses-20060301_obj-2arzt6_ecephys+image.nwb
+199d13b6-2a67-4275-ac66-62b445bb45de:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151113_behavior+ecephys.nwb
+1a29e6df-24cc-4194-a884-99d9264d6842:
+  '000004':
+  - sub-P21HMH/sub-P21HMH_ses-20090101_obj-3ljvpn_ecephys+image.nwb
+1b381749-7098-484b-af81-5eab3e80c4ae:
+  '000004':
+  - sub-TWH089/sub-TWH089_ses-20180301_ecephys+image.nwb
+1e5eb175-de73-4d34-b263-a94e10184400:
+  '000004':
+  - sub-P58CS/sub-P58CS_ses-20180701_obj-ia8uyp_ecephys+image.nwb
+1f1cdc77-41fb-493c-98cd-670613e75bf5:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161010_behavior+ecephys.nwb
+21ad3511-4d13-4965-a17e-e7d4a897a4e3:
+  '000003':
+  - sub-YutaMouse23/sub-YutaMouse23_ses-YutaMouse23-140804_behavior+ecephys.nwb
+21ad9be4-c323-4948-b631-60940fb202e0:
+  '000004':
+  - sub-P16HMH/sub-P16HMH_ses-20071001_obj-12ambkj_ecephys+image.nwb
+231cc128-201b-4d2e-886a-95d05a421852:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56b160913_behavior+ecephys.nwb
+231fd060-f63d-449e-9088-7cb7d7f329bd:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56-160913_behavior+ecephys.nwb
+2419f0de-f360-401c-a955-260f127a5a7c:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151104_behavior+ecephys.nwb
+2435e599-66bd-4a08-b1c0-4a97335a4851:
+  '000003':
+  - sub-YutaMouse54/sub-YutaMouse54_ses-YutaMouse54-160702_behavior+ecephys.nwb
+24c8c473-5ac5-4f69-9b7a-da073a67474f:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150226_behavior+ecephys.nwb
+24e0dc84-f9b3-4e0b-babb-0f22cf065ea2:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161014_behavior+ecephys.nwb
+251c549f-5813-4162-be6f-c67274928376:
+  '000004':
+  - sub-P57CS/sub-P57CS_ses-20180601_obj-9ad1o5_ecephys+image.nwb
+26077cb0-7351-4e58-8e5c-b548f7d3d929:
+  '000003':
+  - sub-YutaMouse45/sub-YutaMouse45_ses-YutaMouse45-160305_behavior+ecephys.nwb
+26543d43-0403-459d-8c2b-f9a07206c3f9:
+  '000004':
+  - sub-TWH101/sub-TWH101_ses-20181001_ecephys+image.nwb
+284eb346-0bc5-42a6-9b33-268e6b0b0bde:
+  '000004':
+  - sub-P10HMH/sub-P10HMH_ses-20060901_ecephys+image.nwb
+28da3a37-0c32-42ec-b86b-694607d486e6:
+  '000004':
+  - sub-P47CS/sub-P47CS_ses-20170201_ecephys+image.nwb
+2b312a36-2c3d-4467-a658-6f352a6cdb6e:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150218_behavior+ecephys.nwb
+2b3f8d56-a69d-435f-be93-0dc0825c2874:
+  '000004':
+  - sub-P53CS/sub-P53CS_ses-20171101_obj-lj04dr_ecephys+image.nwb
+2ce54032-133b-4a58-bf81-878cd4ce58a4:
+  '000004':
+  - sub-P33CS/sub-P33CS_ses-20140301_obj-olcyje_ecephys+image.nwb
+2df36a73-92d8-4c30-96ec-c77bf5da2d47:
+  '000003':
+  - sub-YutaMouse37/sub-YutaMouse37_ses-YutaMouse37-150617_behavior+ecephys.nwb
+2f21f22d-8fd2-4df3-9ba4-580b0f1e5ec4:
+  '000004':
+  - sub-P37CS/sub-P37CS_ses-20150301_ecephys+image.nwb
+30300a11-7ea9-493a-9f42-718d263bae1c:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150909_behavior+ecephys.nwb
+31c23b46-78be-479d-a0da-53bf68a3e57e:
+  '000003':
+  - sub-YutaMouse45/sub-YutaMouse45_ses-YutaMouse45-160302_behavior+ecephys.nwb
+333649c7-72b2-47f8-b52d-e6be1a0ce96c:
+  '000003':
+  - sub-YutaMouse40/sub-YutaMouse40_ses-YutaMouse40-150812_behavior+ecephys.nwb
+35821717-2382-45f2-a87b-f1bb3f7f83f3:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56-160916_behavior+ecephys.nwb
+3617c196-8924-4b41-8307-7de66174422a:
+  '000003':
+  - sub-YutaMouse51/sub-YutaMouse51_ses-YutaMouse51b160516_behavior+ecephys.nwb
+374fb20c-4af2-4154-8651-d587a60142dc:
+  '000004':
+  - sub-P38CS/sub-P38CS_ses-20150701_ecephys+image.nwb
+37f6a52c-62d3-4f7e-b9f9-bf7723fdd720:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160907_behavior+ecephys.nwb
+3840f94b-142b-45b3-acd3-9c372c3fdefd:
+  '000004':
+  - sub-P16HMH/sub-P16HMH_ses-20071001_obj-1jfnx96_ecephys+image.nwb
+3a3449e2-f040-4f09-b6fe-69db445e91e5:
+  '000004':
+  - sub-P49CS/sub-P49CS_ses-20170501_obj-1tdxaqk_ecephys+image.nwb
+3b068999-b071-4bba-af03-37dee5643741:
+  '000004':
+  - sub-P14HMH/sub-P14HMH_ses-20070601_obj-7studd_ecephys+image.nwb
+3b613720-5754-4d47-b003-b881a70f8a3b:
+  '000004':
+  - sub-P26CS/sub-P26CS_ses-20121201_obj-a9jb4x_ecephys+image.nwb
+3d739ac0-10fb-41ef-80be-f1479cec44c0:
+  '000004':
+  - sub-P17HMH/sub-P17HMH_ses-20080501_ecephys+image.nwb
+3e237109-cb48-461d-8664-82e05cb74427:
+  '000004':
+  - sub-P29CS/sub-P29CS_ses-20131001_obj-1ka9ngw_ecephys+image.nwb
+3e5a0d4c-f211-4857-b22c-92d9cf6498ca:
+  '000004':
+  - sub-P33HMH/sub-P33HMH_ses-20110701_ecephys+image.nwb
+403a40b0-ed6e-4225-b4d7-38cca700b8b8:
+  '000003':
+  - sub-YutaMouse39/sub-YutaMouse39_ses-YutaMouse39-150804_behavior+ecephys.nwb
+424b5bd9-15e6-4a88-ab31-c8e9c214e050:
+  '000004':
+  - sub-P49CS/sub-P49CS_ses-20170501_obj-1ft8efg_ecephys+image.nwb
+47a8f637-1537-477b-9eb8-c0cdb984ba6d:
+  '000004':
+  - sub-P54CS/sub-P54CS_ses-20180101_obj-1vx1a5w_ecephys+image.nwb
+47d3ff6d-cbad-42a5-8c1f-feecd7714e5f:
+  '000004':
+  - sub-P33CS/sub-P33CS_ses-20140301_obj-1ps6q26_ecephys+image.nwb
+4bb039ef-9500-4124-b927-eedf1b1d53dd:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150225_behavior+ecephys.nwb
+521dc511-1972-4daf-968e-98b6f927c44d:
+  '000004':
+  - sub-TWH090/sub-TWH090_ses-20180401_ecephys+image.nwb
+5452b2ce-c592-4931-b883-0f11fd7ad0df:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160908_behavior+ecephys.nwb
+5504e139-19ce-4de6-a6e0-e5f99a290169:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161006_behavior+ecephys.nwb
+55e7cbc8-eda8-4580-a0d2-751ea7531b48:
+  '000004':
+  - sub-P27CS/sub-P27CS_ses-20130101_ecephys+image.nwb
+581eb6f7-1566-44ed-8134-5f951e7732d1:
+  '000003':
+  - sub-YutaMouse23/sub-YutaMouse23_ses-YutaMouse23-140806_behavior+ecephys.nwb
+58c53789-eec4-4080-ad3b-207cf2a1cac9:
+  '000003':
+  - sub-YutaMouse20/sub-YutaMouse20_ses-YutaMouse20-140327_behavior+ecephys.nwb
+58fff79f-ef69-4f07-a876-34dd8d11462d:
+  '000004':
+  - sub-P9HMH/sub-P9HMH_ses-20060301_obj-1otd1m8_ecephys+image.nwb
+59cf6dc5-ee40-4c37-bb1e-be7dc3660435:
+  '000004':
+  - sub-P53CS/sub-P53CS_ses-20171101_obj-108aqix_ecephys+image.nwb
+5cef68ed-e088-441a-83f5-0175e2bf63d4:
+  '000004':
+  - sub-P43HMH/sub-P43HMH_ses-20130401_ecephys+image.nwb
+5da35095-87a7-4a4f-8c63-cfabbed46e2f:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150910_behavior+ecephys.nwb
+5e0fc82e-bd09-4e13-ad4a-657d07598898:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151102_behavior+ecephys.nwb
+5e2a9245-8e95-4852-aa15-79d4670806bc:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150911_behavior+ecephys.nwb
+5e9b0e8a-34d5-477e-bb26-f17e752f3ee0:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161013_behavior+ecephys.nwb
+5faaa59c-f5a0-4868-b4fc-a310ed7e54f5:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160901_behavior+ecephys.nwb
+61e18f47-456e-4277-9140-2056b2a9b769:
+  '000004':
+  - sub-TWH107/sub-TWH107_ses-20181201_ecephys+image.nwb
+632cc302-377d-4a92-8b1d-cffd78fcf094:
+  '000003':
+  - sub-YutaMouse39/sub-YutaMouse39_ses-YutaMouse39-150729_behavior+ecephys.nwb
+63538f7d-1e84-43a4-a4f3-10bbb831f600:
+  '000004':
+  - sub-P29CS/sub-P29CS_ses-20131001_obj-r4hf2_ecephys+image.nwb
+66f06587-061e-430f-8332-8fd24855a5c2:
+  '000003':
+  - sub-YutaMouse37/sub-YutaMouse37_ses-YutaMouse37-150611_behavior+ecephys.nwb
+671ce321-7e97-4204-a9f0-92052d7d8b0b:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55b160907_behavior+ecephys.nwb
+6728753c-39e0-441a-9a66-a68ae164bc92:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150223_behavior+ecephys.nwb
+68240595-dea7-47c7-aaff-46d6f698e6f1:
+  '000003':
+  - sub-YutaMouse39/sub-YutaMouse39_ses-YutaMouse39-150730_behavior+ecephys.nwb
+69c92597-2a55-4960-94b4-9251bff77a90:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160909_behavior+ecephys.nwb
+6b8487f2-0bdc-48f6-99c4-771e1db27394:
+  '000004':
+  - sub-P19HMH/sub-P19HMH_ses-20080601_obj-1tmj21e_ecephys+image.nwb
+6c346805-f2c1-4153-9bc5-9b74416b43d3:
+  '000004':
+  - sub-P39CS/sub-P39CS_ses-20150801_obj-14sjqvm_ecephys+image.nwb
+6ff2a079-8fb1-48d5-96a3-d401689ea767:
+  '000004':
+  - sub-TWH103/sub-TWH103_ses-20181101_ecephys+image.nwb
+71a32709-17cc-491c-a065-68fa448be2de:
+  '000004':
+  - sub-P27HMH/sub-P27HMH_ses-20100201_ecephys+image.nwb
+73d9c334-2b42-4c58-9bc7-2412a0e11c1f:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151109_ecephys.nwb
+74bf5db2-da1c-4747-8099-6b3022865b29:
+  '000004':
+  - sub-P54CS/sub-P54CS_ses-20180101_obj-1ru98u8_ecephys+image.nwb
+752fd021-b3b3-4398-9b52-3d5c5dcc71fb:
+  '000004':
+  - sub-P29HMH/sub-P29HMH_ses-20101201_ecephys+image.nwb
+76034a05-1e93-42e5-86f6-2da2b94383b0:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150830_behavior+ecephys.nwb
+78a0b2a6-3838-49fb-872c-27b9d0849aa5:
+  '000004':
+  - sub-P25CS/sub-P25CS_ses-20120901_obj-uhyr63_ecephys+image.nwb
+7a31d167-ef75-4418-ade5-83ac8e1c0fa6:
+  '000003':
+  - sub-YutaMouse51/sub-YutaMouse51_ses-YutaMouse51b160514_behavior+ecephys.nwb
+7a64351b-f6e7-4471-8908-f90f2e3422de:
+  '000003':
+  - sub-YutaMouse45/sub-YutaMouse45_ses-YutaMouse45-160303_behavior+ecephys.nwb
+7ad5ffa4-bcc8-49da-a49e-d874524aa2b1:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56-160915_behavior+ecephys.nwb
+7dd7475b-4b32-45a1-8963-1cb25365751b:
+  '000004':
+  - sub-P42CS/sub-P42CS_ses-20160801_obj-xl1j7v_ecephys+image.nwb
+7f4740f9-48d1-484b-b3f4-b1dab0960b76:
+  '000004':
+  - sub-P61CS/sub-P61CS_ses-20190201_ecephys+image.nwb
+81020abf-64e1-46dd-83f7-f75bed344737:
+  '000004':
+  - sub-P21HMH/sub-P21HMH_ses-20090101_obj-slgaak_ecephys+image.nwb
+81256f92-0a31-4b24-8c59-90a3a64e91b1:
+  '000004':
+  - sub-P11HMH/sub-P11HMH_ses-20061101_ecephys+image.nwb
+818de4f1-47ec-4b14-9ae3-6ebcd64c20a7:
+  '000003':
+  - sub-YutaMouse37/sub-YutaMouse37_ses-YutaMouse37-150609_behavior+ecephys.nwb
+8518ac3a-cc96-468d-b97e-fcec4209fc62:
+  '000004':
+  - sub-P42HMH/sub-P42HMH_ses-20130301_obj-4rl7w2_ecephys+image.nwb
+88e7bbf0-aafd-4d41-9950-10324f487f15:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161016_behavior+ecephys.nwb
+8da3d7e4-ccbd-457d-a26f-d6a7a7fc7b60:
+  '000004':
+  - sub-TWH088/sub-TWH088_ses-20180301_obj-fkumf6_ecephys+image.nwb
+8e27a42a-91cb-411a-b7b3-56e35af45fb2:
+  '000004':
+  - sub-P62CS/sub-P62CS_ses-20190401_ecephys+image.nwb
+8ea85c44-53d9-4645-858c-a632e4d91e7a:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150902_behavior+ecephys.nwb
+925d0754-f356-4fd4-8a94-6b43fb3950d8:
+  '000003':
+  - sub-YutaMouse54/sub-YutaMouse54_ses-YutaMouse54-160701_behavior+ecephys.nwb
+935789d4-3a2f-4cdf-a0f6-c7127bbcac1f:
+  '000003':
+  - sub-YutaMouse51/sub-YutaMouse51_ses-YutaMouse51-160515_behavior+ecephys.nwb
+944e5bd8-bf01-4924-8514-380d8e599b2b:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56b160915_behavior+ecephys.nwb
+96d88eac-c822-48b9-b971-3565cc5a0953:
+  '000004':
+  - sub-P31CS/sub-P31CS_ses-20140201_ecephys+image.nwb
+990de21f-3259-4d13-8471-8289419bf0f1:
+  '000004':
+  - sub-TWH100/sub-TWH100_ses-20181001_ecephys+image.nwb
+99ffabcd-6e53-4936-854e-57173ae93864:
+  '000004':
+  - sub-P58CS/sub-P58CS_ses-20180701_obj-n6u3dz_ecephys+image.nwb
+9cb648be-db55-4c14-bb3d-78ef0d42bb09:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56-160914_behavior+ecephys.nwb
+9cbe6cc9-9aeb-40b8-b23c-45e0078c2f14:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150224_behavior+ecephys.nwb
+9d75f609-1be8-4055-be2f-6980412de120:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150908_behavior+ecephys.nwb
+9e1669a5-95c1-46bc-b88c-5f026334991b:
+  '000004':
+  - sub-P57CS/sub-P57CS_ses-20180601_obj-12hkdgu_ecephys+image.nwb
+9f475e45-1cf3-41f0-9375-8dd2f9861d8d:
+  '000003':
+  - sub-YutaMouse39/sub-YutaMouse39_ses-YutaMouse39-150803_behavior+ecephys.nwb
+a05d4816-47f8-4a3f-a52e-a9acadf21f29:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56b160914_behavior+ecephys.nwb
+a32f3e49-12fb-4a33-8afa-0ae07bc92cd4:
+  '000004':
+  - sub-P33CS/sub-P33CS_ses-20140301_obj-1xtqryy_ecephys+image.nwb
+a44eb19e-9ed4-40fa-a8d5-7f9546de9e3e:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151117_behavior+ecephys.nwb
+a5909726-e0d7-41c3-a785-d7fe1019a041:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151103_behavior+ecephys.nwb
+a6fad11e-709a-4d60-a74a-2ee79fff7b34:
+  '000004':
+  - sub-P18HMH/sub-P18HMH_ses-20080601_ecephys+image.nwb
+a7b4ee56-c72c-4ce4-9d81-01c2def23d18:
+  '000004':
+  - sub-P28HMH/sub-P28HMH_ses-20100313_ecephys+image.nwb
+a98c5501-c260-458d-805c-6d96400d7c58:
+  '000004':
+  - sub-P56CS/sub-P56CS_ses-20180401_ecephys+image.nwb
+ad7bc3a4-f594-4df3-89ab-20a1bee74963:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161004_behavior+ecephys.nwb
+aecbd14f-b2f8-4a9a-9fe7-9b4e57f1aae8:
+  '000004':
+  - sub-P44HMH/sub-P44HMH_ses-20000101_ecephys+image.nwb
+afd5452d-1bb8-4dd4-a4a0-27e73a6a7f3b:
+  '000004':
+  - sub-P24CS/sub-P24CS_ses-20120901_obj-enj8r0_ecephys+image.nwb
+b1cbe7d9-d3b0-40ea-b53f-3429627e56f2:
+  '000003':
+  - sub-YutaMouse20/sub-YutaMouse20_ses-YutaMouse20-140324_behavior+ecephys.nwb
+b26df741-d6e2-42bf-971e-7bba7bcf3c4f:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151112_behavior+ecephys.nwb
+b2d65df6-6ac3-4fd2-aaee-9269e4c18e1f:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150219_behavior+ecephys.nwb
+b3196ece-fbf4-4ed1-a471-e96c1c266a44:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150220_behavior+ecephys.nwb
+b61f534b-d40c-46bd-8cfb-2b51a3eef9c2:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151108_behavior+ecephys.nwb
+b7d1af71-e5a0-4436-8058-3188ba4522e6:
+  '000003':
+  - sub-YutaMouse38/sub-YutaMouse38_ses-YutaMouse38-150709_behavior+ecephys.nwb
+b9c99cba-0f2b-469c-9747-22c69ac8170f:
+  '000003':
+  - sub-YutaMouse44/sub-YutaMouse44_ses-YutaMouse44-151128_behavior+ecephys.nwb
+ba1e010e-fd56-424a-a26f-0d8e93e0e16c:
+  '000003':
+  - sub-YutaMouse39/sub-YutaMouse39_ses-YutaMouse39-150728_behavior+ecephys.nwb
+ba988ffa-0d3b-42a4-8d63-4aeef3727259:
+  '000003':
+  - sub-YutaMouse45/sub-YutaMouse45_ses-YutaMouse45-160304_behavior+ecephys.nwb
+bb7b071c-7eac-45d2-a4ed-e7e888e0d50a:
+  '000004':
+  - sub-P24CS/sub-P24CS_ses-20120901_obj-j6ja42_ecephys+image.nwb
+bb81f7b3-4cfa-40e7-aa89-95beb1954d8c:
+  '000003':
+  - sub-YutaMouse20/sub-YutaMouse20_ses-YutaMouse20-140321_behavior+ecephys.nwb
+bc82758f-ce50-4ec8-a630-76b73dab064c:
+  '000004':
+  - sub-P25CS/sub-P25CS_ses-20120901_obj-1nyxvwf_ecephys+image.nwb
+be4594ef-f0db-43b4-b4fa-823927ee3b40:
+  '000003':
+  - sub-YutaMouse39/sub-YutaMouse39_ses-YutaMouse39-150727_behavior+ecephys.nwb
+c09bd708-ebc6-4ebf-96de-958cd6cd08af:
+  '000004':
+  - sub-P32CS/sub-P32CS_ses-20140201_ecephys+image.nwb
+c3558342-c064-49eb-a77f-d50a872fcd81:
+  '000004':
+  - sub-TWH098/sub-TWH098_ses-20180901_ecephys+image.nwb
+c373b9c3-8276-451b-8358-3c090d7f41f3:
+  '000004':
+  - sub-P34CS/sub-P34CS_ses-20141201_ecephys+image.nwb
+c66ba2a5-c222-464a-917a-656449cda233:
+  '000004':
+  - sub-P44CS/sub-P44CS_ses-20160901_ecephys+image.nwb
+c6977d72-b275-4ffd-a441-79412c341315:
+  '000004':
+  - sub-P21HMH/sub-P21HMH_ses-20090101_obj-1femyyi_ecephys+image.nwb
+c86cdfba-e1af-45a7-8dfd-d243adc20ced:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150222_behavior+ecephys.nwb
+c8add320-41c7-40cd-81c5-b1550356bc94:
+  '000004':
+  - sub-P51CS/sub-P51CS_ses-20170701_obj-r8wk_ecephys+image.nwb
+c918aedf-858b-4d3d-9121-6bd558c5ce2c:
+  '000004':
+  - sub-P23HMH/sub-P23HMH_ses-20090201_obj-1k3199e_ecephys+image.nwb
+cc586a47-fbba-4019-b3a3-51566b773840:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151110_ecephys.nwb
+cedb6122-00c5-4bdc-8daf-9c6b34724004:
+  '000003':
+  - sub-YutaMouse23/sub-YutaMouse23_ses-YutaMouse23-140805_behavior+ecephys.nwb
+cf1c32eb-f194-4f4d-81a6-08d5d3383b48:
+  '000003':
+  - sub-YutaMouse51/sub-YutaMouse51_ses-YutaMouse51-160516_behavior+ecephys.nwb
+d2f923ca-782b-4a01-ac61-bc63fc4569bd:
+  '000004':
+  - sub-P15HMH/sub-P15HMH_ses-20070901_obj-bdd49u_ecephys+image.nwb
+d4a6860c-15fa-45e7-9df8-ebd6db613443:
+  '000003':
+  - sub-YutaMouse54/sub-YutaMouse54_ses-YutaMouse54b160701_behavior+ecephys.nwb
+d5ce6642-e5d1-4d60-bd3b-4202c88eaabe:
+  '000004':
+  - sub-P51CS/sub-P51CS_ses-20170701_obj-whpzxi_ecephys+image.nwb
+d6428a75-275c-403e-9789-c1be7f62b3b9:
+  '000003':
+  - sub-YutaMouse54/sub-YutaMouse54_ses-YutaMouse54b160702_behavior+ecephys.nwb
+d649c8c7-f000-4440-8250-c221899af1b2:
+  '000004':
+  - sub-P19HMH/sub-P19HMH_ses-20080601_obj-uw5up9_ecephys+image.nwb
+d6528d84-760d-47cf-93d5-d4e17c7256b6:
+  '000004':
+  - sub-P55CS/sub-P55CS_ses-20180301_ecephys+image.nwb
+d6e96a4a-590f-4553-8c0b-50f47a995e75:
+  '000003':
+  - sub-YutaMouse45/sub-YutaMouse45_ses-YutaMouse45-160301_behavior+ecephys.nwb
+d76dd51f-ac2d-4493-9fd0-2c16a3f00462:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56-160911_behavior+ecephys.nwb
+d913173a-1ae1-4b60-9605-ec0d446a4502:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161011_behavior+ecephys.nwb
+da5d5395-ebd1-41e9-aa10-4ee7bad0b17c:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150903_behavior+ecephys.nwb
+dcf88df7-8dce-458c-8f10-251c545540bf:
+  '000004':
+  - sub-P23HMH/sub-P23HMH_ses-20090201_obj-q3na3m_ecephys+image.nwb
+de096722-f12a-460d-a572-354092a36e8f:
+  '000003':
+  - sub-YutaMouse20/sub-YutaMouse20_ses-YutaMouse20-140325_behavior+ecephys.nwb
+dee653e9-e20d-4d0a-beac-d8d127ebf7bc:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151118_behavior+ecephys.nwb
+df2f4681-5675-4271-9ca8-37c0d3b5f7a4:
+  '000004':
+  - sub-P48CS/sub-P48CS_ses-20170301_ecephys+image.nwb
+dfae1bfd-6587-421e-b658-51de87814e1a:
+  '000004':
+  - sub-P48HMH/sub-P48HMH_ses-20141201_ecephys+image.nwb
+dff0f7e1-5b66-4d7f-a5bd-853c9faecef9:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151114_behavior+ecephys.nwb
+e384e055-ec5e-4766-8ba1-1a319538f9f1:
+  '000004':
+  - sub-P47HMH/sub-P47HMH_ses-20140601_obj-idwqk1_ecephys+image.nwb
+e38a096a-a202-4fb0-8f1f-9bcc30cf5e08:
+  '000004':
+  - sub-P47HMH/sub-P47HMH_ses-20140601_obj-vnr1ai_ecephys+image.nwb
+e7d290ec-9cbb-4209-8b8f-096fdb46e447:
+  '000004':
+  - sub-P31HMH/sub-P31HMH_ses-20110401_ecephys+image.nwb
+ebbb8348-d5c8-4378-aa1d-8ed7a9f4859a:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151106_behavior+ecephys.nwb
+edb9f7f8-a161-44e1-b4c4-b914717474fb:
+  '000003':
+  - sub-YutaMouse33/sub-YutaMouse33_ses-YutaMouse33-150221_behavior+ecephys.nwb
+ee07948f-e868-4fd1-a9c9-016dd7d7c166:
+  '000004':
+  - sub-P42CS/sub-P42CS_ses-20160801_obj-4o8frf_ecephys+image.nwb
+ee7ff804-5d2d-48eb-971b-63dfe5560ef1:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160902_behavior+ecephys.nwb
+eed60c6d-2c69-4226-8c3d-ab298e8cdbb2:
+  '000003':
+  - sub-YutaMouse40/sub-YutaMouse40_ses-YutaMouse40-150816_behavior+ecephys.nwb
+ef1c8675-da24-47ec-91a8-a2df0b76fbfd:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151105_behavior+ecephys.nwb
+f0318e30-4f4f-466d-a8e9-a962863e3081:
+  '000003':
+  - sub-YutaMouse54/sub-YutaMouse54_ses-YutaMouse54-160630_behavior+ecephys.nwb
+f057e882-9064-4d91-8cca-17f90bd04bf6:
+  '000004':
+  - sub-P26CS/sub-P26CS_ses-20121201_obj-bms1d7_ecephys+image.nwb
+f4b74753-d234-45ed-98f4-bf387241989e:
+  '000004':
+  - sub-P51HMH/sub-P51HMH_ses-20160201_obj-1hgu6x_ecephys+image.nwb
+f5267be1-64b4-4568-8240-934be07f2760:
+  '000004':
+  - sub-TWH088/sub-TWH088_ses-20180301_obj-14chmi4_ecephys+image.nwb
+f558e88a-7807-499e-966d-0272b9287a65:
+  '000003':
+  - sub-YutaMouse42/sub-YutaMouse42_ses-YutaMouse42-151111_ecephys.nwb
+f8b614be-54df-4b6d-ad47-f8b78502ed07:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150831_behavior+ecephys.nwb
+f91963cc-c757-4946-8ca0-a0351a211ecf:
+  '000003':
+  - sub-YutaMouse41/sub-YutaMouse41_ses-YutaMouse41-150829_behavior+ecephys.nwb
+f9583287-ffd5-4d3b-874d-4ec292068c97:
+  '000003':
+  - sub-YutaMouse57/sub-YutaMouse57_ses-YutaMouse57-161007_behavior+ecephys.nwb
+fa9bc105-8cc6-4acb-a34e-e8742336b42c:
+  '000003':
+  - sub-YutaMouse56/sub-YutaMouse56_ses-YutaMouse56-160912_behavior+ecephys.nwb
+fb1403f4-88f1-4d37-bcbb-bc9d0b4e7d61:
+  '000003':
+  - sub-YutaMouse55/sub-YutaMouse55_ses-YutaMouse55-160911_behavior+ecephys.nwb
+fd919645-8e73-42d8-9098-4cff6361dda6:
+  '000004':
+  - sub-P42HMH/sub-P42HMH_ses-20130301_obj-1ysquep_ecephys+image.nwb
+fe5bdade-dd30-4150-b12f-fd1dc3f728ec:
+  '000003':
+  - sub-YutaMouse40/sub-YutaMouse40_ses-YutaMouse40-150814_behavior+ecephys.nwb
