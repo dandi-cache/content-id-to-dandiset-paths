@@ -25,12 +25,12 @@ def _get_info(file_path: pathlib.Path, content_id_to_dandiset_paths: dict[str, d
 
 
 def _run(base_directory: pathlib.Path, /) -> None:
-    asset_file_paths = [path for path in (base_directory / "sourcedata").rglob(pattern="assets.yaml")]
+    asset_file_paths = sorted([path for path in (base_directory / "sourcedata").rglob(pattern="assets.yaml")])
     if len(asset_file_paths) == 0:
         message = (
             f"\nNo asset files found in `{base_directory / 'sourcedata'}`.\n"
             "Please navigate to the top-level directory (`content-id-to-dandiset-paths`) and run: \n\n"
-            '\ts5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata`\n\n'
+            '\ts5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata\n\n'
         )
         raise RuntimeError(message)
 
