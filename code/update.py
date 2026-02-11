@@ -7,7 +7,7 @@ import yaml
 def _get_info(file_path: pathlib.Path, content_id_to_dandiset_paths: dict[str, dict[str, set[str]]]) -> None:
     """Mutates info in-place."""
     with file_path.open(mode="r") as file_stream:
-        all_asset_metadata = yaml.safe_load(stream=file_stream)
+        all_asset_metadata = yaml.safe_load(stream=file_stream) or []
 
     for asset_metadata in all_asset_metadata:
         content_urls = asset_metadata["contentUrl"]
@@ -25,7 +25,7 @@ def _get_info(file_path: pathlib.Path, content_id_to_dandiset_paths: dict[str, d
 
 
 def _run(base_directory: pathlib.Path, /) -> None:
-    asset_file_paths = [path for path in (base_directory / "sourcedata").rglob(pattern="assets.yaml")]
+    asset_file_paths = sorted([path for path in (base_directory / "sourcedata").rglob(pattern="assets.yaml")])
     if len(asset_file_paths) == 0:
         message = (
             f"\nNo asset files found in `{base_directory / 'sourcedata'}`.\n"
