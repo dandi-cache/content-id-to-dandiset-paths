@@ -38,7 +38,7 @@ def _run(base_directory: pathlib.Path, /) -> None:
     collections.deque(
         (
             _get_info(file_path=file_path, content_id_to_dandiset_paths=content_id_to_dandiset_paths)
-            for file_path in asset_file_paths[:5]
+            for file_path in asset_file_paths
         ),
         maxlen=0,
     )
