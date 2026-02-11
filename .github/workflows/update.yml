@@ -26,6 +26,8 @@ jobs:
           pip install s5cmd PyYaml
 
           cd content-id-to-dandiset-paths
+          pwd
+          ls
           s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata || true
           python code/update.py
 
