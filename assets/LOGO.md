@@ -1,6 +1,6 @@
 # DANDI Cache Logo
 
-This document describes the newly created DANDI Cache logo.
+This document describes the DANDI Cache logo.
 
 ## Logo File
 
@@ -8,44 +8,64 @@ The logo is located at: `assets/logo.svg`
 
 ## Design Concept
 
-The DANDI Cache logo is a derivative of the main DANDI Archive logo, designed to represent the entire DANDI Cache subproject (not just this specific repository).
+The DANDI Cache logo is a pure cache-themed design without any text, representing the entire DANDI Cache subproject through visual symbolism.
 
-### Original Elements from DANDI Archive
+### Core Elements
 
-- **Brain Icon**: Pink/coral colored brain representing neuroscience data (colors: #D3868D, #F0A5AC, #A05A60)
-- **Beaker Icon**: Laboratory flask representing scientific research
-- **DANDI Text**: Bold dark blue text (#00436D) preserving brand identity
+- **Central Database Cylinder**: A 3D cylinder representing the central cache storage
+  - Dark blue body (#00436D) for the main database structure
+  - Teal caps (#4A90A4) for the top and bottom of the cylinder
+  - Horizontal lines showing layered disk stacks/data partitions
+  
+- **Hash/Key Symbol**: A hash (#) symbol in the center of the cylinder
+  - Light blue color (#A8D5E2) 
+  - Represents key-value pairs and content addressing
+  - Core concept of caching and hashing
 
-### New Cache-Specific Elements
+- **Network Nodes**: Five circular nodes surrounding the cache
+  - Pink/coral outer rings (#F0A5AC) - subtle connection to DANDI Archive branding
+  - Light blue middle rings (#A8D5E2)
+  - Teal centers (#4A90A4)
+  - Represent distributed access points and clients
 
-- **Network Nodes**: Four circular nodes in teal/blue (#4A90A4) representing cache infrastructure points
-- **Connection Lines**: Lines connecting the nodes representing data paths and relationships between cached content
-- **CACHE Text**: Teal/blue subtitle text clearly identifying this as the Cache variant
+- **Connection Lines**: Lines connecting nodes to the central cache
+  - Teal color (#4A90A4) with transparency
+  - Visualize data flow and network connections
+  
+- **Data Flow Arrows**: Small directional arrows
+  - Show active data transfer to/from cache
+  - Cyan/teal color (#6BB6CC)
+
+- **Cache Entry Indicators**: Small rectangles on the cylinder sides
+  - Represent individual cached items/entries
+  - Semi-transparent to show layering
 
 ## Visual Metaphor
 
-The network overlay creates a visual metaphor for:
-- **Caching Infrastructure**: The nodes represent distributed cache points
-- **Content Mapping**: The connecting lines represent the relationships and paths tracked by the cache
-- **Data Flow**: The network structure suggests efficient data routing and retrieval
+The logo creates a clear visual representation of:
+- **Caching Infrastructure**: Central storage with multiple access points
+- **Content Addressing**: Hash symbol representing key-based lookups
+- **Data Flow**: Arrows and connections showing active data movement
+- **Distributed Access**: Multiple nodes accessing a single cache source
+- **Layered Storage**: Horizontal lines suggesting stacked data layers
 
 ## Color Palette
 
-| Element | Color | Hex Code |
-|---------|-------|----------|
-| Brain (main) | Light coral | #F0A5AC |
-| Brain (accent) | Medium coral | #D3868D |
-| Brain (detail) | Dark coral | #A05A60 |
-| Beaker/Text | Dark blue | #00436D |
-| Cache nodes/text | Teal blue | #4A90A4 |
-| Background | White | #FFFFFF |
+| Element | Color | Hex Code | Purpose |
+|---------|-------|----------|---------|
+| Database body | Dark blue | #00436D | Main structural element |
+| Cylinder caps | Teal | #4A90A4 | Cache containers |
+| Divider lines | Cyan | #6BB6CC | Data layer separation |
+| Hash symbol | Light blue | #A8D5E2 | Key-value representation |
+| Node accents | Pink/coral | #F0A5AC | Subtle DANDI connection |
+| Shadow/depth | Deep blue | #003052 | Depth and dimension |
 
 ## Technical Specifications
 
 - **Format**: SVG (Scalable Vector Graphics)
-- **File Size**: 7.9 KB (7,924 bytes)
-- **ViewBox**: 0 0 3600 1341
-- **Aspect Ratio**: ~2.7:1 (wide format)
+- **File Size**: 4.7 KB (4,844 bytes)
+- **ViewBox**: 0 0 800 800
+- **Aspect Ratio**: 1:1 (square format)
 - **Compatibility**: Works in all modern browsers and GitHub README files
 
 ## Usage
@@ -60,14 +80,15 @@ The logo is displayed at the top of the README:
 
 ## Design Rationale
 
-1. **Brand Consistency**: Maintains strong visual connection to DANDI Archive
-2. **Clear Differentiation**: Cache-specific elements clearly identify this as a subproject
-3. **Scalability**: SVG format ensures the logo looks sharp at any size
-4. **Professional**: Extends the scientific, professional aesthetic of the main brand
-5. **Meaningful**: The network overlay provides visual meaning beyond decoration
+1. **No Text**: Universal symbol that transcends language barriers
+2. **Cache-Focused**: Every element directly relates to caching concepts
+3. **Clear Symbolism**: Database cylinder and hash symbol are industry-standard icons
+4. **Network Visualization**: Shows distributed architecture
+5. **Professional**: Clean, technical aesthetic appropriate for developer tools
+6. **Scalable**: Square format and SVG ensure flexibility in use
+7. **Subtle Brand Link**: Pink accents maintain connection to DANDI without being derivative
 
 ## Credits
 
-- Original DANDI Archive logo design: Adobe Illustrator (from dandi-archive repository)
-- DANDI Cache logo adaptation: Created for the dandi-cache organization
-- Based on the brain icon (noun_Brain_38917)
+- DANDI Cache logo: Original design for the dandi-cache organization
+- Color inspiration: DANDI Archive color palette (coral/pink, dark blue)
