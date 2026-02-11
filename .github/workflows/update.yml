@@ -7,7 +7,7 @@ on:
 
 env:
   GITHUB_TOKEN: ${{ secrets._GITHUB_API_KEY }}
-  REPO_DIR_NAME: ${{ github.event.repository.name }}
+  REPO_DIR: ${{ github.event.repository.name }}
 
 jobs:
   Update:
@@ -26,30 +26,30 @@ jobs:
         run: |
           pip install s5cmd PyYaml
 
-          cd $REPO_DIR_NAME
-          s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata || true
+          s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" "$REPO_DIR/sourcedata" || true
           python code/update.py
 
       - name: Upload YAML
         run: |
-          cd $REPO_DIR_NAME
+          cd $REPO_DIR
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit --message "update" || true  # || true in case of no changes
           git push
 
-          git push origin --delete min
-          git checkout -b min
-
       - name: Run minification
         run: |
-          cd $REPO_DIR_NAME
+          cd $REPO_DIR
           python code/minify.py
 
       - name: Upload minification
         run: |
-          cd $REPO_DIR_NAME
+          git push origin --delete min
+
+          cd $REPO_DIR
+
+          git checkout -b min
           git add .
           git commit --message "update min" || true  # || true in case of no changes
           git push --set-upstream origin min
