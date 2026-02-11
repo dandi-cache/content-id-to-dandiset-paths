@@ -86,11 +86,11 @@
 <!-- Data flow arrows/indicators -->
 <g id="data-flow">
 	<!-- Arrow from top -->
-	<path class="accent" d="M400,180 L400,170 L410,180 L400,170 L390,180 Z" style="opacity:0.8"/>
+	<path class="accent" d="M400,180 L400,170 L410,180 L390,180 Z" style="opacity:0.8"/>
 	<!-- Arrow from right -->
-	<path class="accent" d="M560,350 L570,350 L560,360 L570,350 L560,340 Z" style="opacity:0.8"/>
+	<path class="accent" d="M560,350 L570,350 L560,360 L560,340 Z" style="opacity:0.8"/>
 	<!-- Arrow from left -->
-	<path class="accent" d="M240,350 L230,350 L240,340 L230,350 L240,360 Z" style="opacity:0.8"/>
+	<path class="accent" d="M240,350 L230,350 L240,340 L240,360 Z" style="opacity:0.8"/>
 </g>
 
 <!-- Key-value pair visualization -->
