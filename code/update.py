@@ -7,11 +7,7 @@ import yaml
 def _get_info(file_path: pathlib.Path, content_id_to_dandiset_paths: dict[str, dict[str, set[str]]]) -> None:
     """Mutates info in-place."""
     with file_path.open(mode="r") as file_stream:
-        all_asset_metadata = yaml.safe_load(stream=file_stream)
-
-    if all_asset_metadata is None:
-        message = f"\nNo asset metadata found in `{file_path}`.\n"
-        raise RuntimeError(message)
+        all_asset_metadata = yaml.safe_load(stream=file_stream) or []
 
     for asset_metadata in all_asset_metadata:
         content_urls = asset_metadata["contentUrl"]
