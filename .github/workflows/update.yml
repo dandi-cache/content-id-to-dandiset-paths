@@ -15,24 +15,22 @@ jobs:
 
     steps:
       - name: Clone
-        run: git clone -b improve https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/dandi-cache/content-id-to-dandiset-paths.git
+        run: git clone -b main https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/dandi-cache/content-id-to-dandiset-paths.git
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: 3.13
 
-      - name: Run
+      - name: Run update
         run: |
           pip install s5cmd PyYaml
 
           cd $REPO_DIR_NAME
-          pwd
-          ls
           s5cmd --no-sign-request cp "s3://dandiarchive/dandisets/*/assets.yaml" sourcedata || true
           python code/update.py
 
-      - name: Upload
+      - name: Upload YAML
         run: |
           cd $REPO_DIR_NAME
           git config --global user.name "github-actions[bot]"
@@ -40,6 +38,21 @@ jobs:
           git add .
           git commit --message "update" || true  # || true in case of no changes
           git push
+
+          git push origin --delete min
+          git checkout -b min
+
+      - name: Run minification
+        run: |
+          cd $REPO_DIR_NAME
+          python code/minify.py
+
+      - name: Upload minification
+        run: |
+          cd $REPO_DIR_NAME
+          git add .
+          git commit --message "update min" || true  # || true in case of no changes
+          git push --set-upstream origin min
 
   NotifyOnFailure:
     runs-on: ubuntu-latest
