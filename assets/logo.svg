@@ -13,6 +13,7 @@
 </style>
 
 <!-- DANDI Brain Icon (scaled and centered) -->
+<!-- Transform: translate(200, 200) centers the brain origin, scale(0.45) sizes it to fit within the cache ring -->
 <g id="brain-icon" transform="translate(200, 200) scale(0.45)">
 	<polygon class="brain-med" points="641.1,162.5 774.5,40.4 922.4,162.5 1058.1,227.2 1142.1,457.4 1119.8,596.9
 		951.7,664.8 844.1,536.5 647.5,235.3 "/>
