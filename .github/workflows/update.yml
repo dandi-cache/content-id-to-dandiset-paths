@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Clone
-        run: git clone -b main https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/dandi-cache/content-id-to-dandiset-paths.git
+        run: git clone -b main https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/dandi-cache/$REPO_DIR.git
 
       - name: Setup Python
         uses: actions/setup-python@v5
