@@ -43,7 +43,7 @@ jobs:
 
       - name: Upload minification
         run: |
-          git -C $REPO_DIR push origin --delete min
+          git -C $REPO_DIR push origin --delete min || true  # || true in case branch doesn't exist yet
 
           git -C $REPO_DIR checkout -b min
           git -C $REPO_DIR add .
