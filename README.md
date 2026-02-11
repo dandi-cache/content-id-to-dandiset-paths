@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="assets/logo.svg" alt="DANDI Cache Logo" width="600"/>
+</div>
+
 # DANDI Cache: Content ID → Dandiset paths
 
 A cache of the content ID relationship to current Dandiset paths.
