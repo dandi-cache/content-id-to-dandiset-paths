@@ -1,9 +1,12 @@
 [project]
-name = "<cache-name>"
+name = "content-id-to-dandiset-paths"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
     "datalad",
     "datalad-container",
-    # TODO: add this cache's processing dependencies used by code/update.py.
+    # Processing dependencies used by code/update.py: it reads the DANDI archive's
+    # `assets.yaml` manifests directly from public S3.
+    "boto3",
+    "pyyaml",
 ]
