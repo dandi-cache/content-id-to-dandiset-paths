@@ -88,9 +88,7 @@ def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> N
         for content_id in sorted(content_id_to_dandiset_paths):
             dandiset_paths = content_id_to_dandiset_paths[content_id]
             record = {
-                content_id: {
-                    dandiset_id: sorted(dandiset_paths[dandiset_id]) for dandiset_id in sorted(dandiset_paths)
-                }
+                content_id: {dandiset_id: sorted(dandiset_paths[dandiset_id]) for dandiset_id in sorted(dandiset_paths)}
             }
             file_stream.write(f"{json.dumps(record)}\n")
 
