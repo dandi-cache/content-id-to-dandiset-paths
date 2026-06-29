@@ -38,12 +38,6 @@ Each line is one JSON record mapping a content ID to the Dandisets and paths it 
 {"<content_id>": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
 ```
 
-Merging the lines as above gives a single `dict` keyed by content ID:
-
-```python
-content_id_to_dandiset_paths["<content_id>"]  # -> {"<dandiset_id>": ["<path/in/dandiset>", "..."]}
-```
-
 ### Save to file
 
 ```bash
