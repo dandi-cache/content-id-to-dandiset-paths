@@ -31,7 +31,7 @@ content_id_to_dandiset_paths = [json.loads(line) for line in lines]
 Each line is one JSON record mapping a content ID to the Dandisets and paths it appears at:
 
 ```json
-{"content_id": "<content_id>", "dandisets": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
+{"<content_id>": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
 ```
 
 ### Save to file

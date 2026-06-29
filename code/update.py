@@ -82,16 +82,15 @@ def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> N
     derivatives_directory = base_directory / "derivatives"
     derivatives_directory.mkdir(parents=True, exist_ok=True)
 
-    # One JSON value per line: `{"content_id": ..., "dandisets": {"<dandiset_id>": ["<path>", ...]}}`.
+    # One JSON value per line: `{"<content_id>": {"<dandiset_id>": ["<path>", ...]}}`.
     output_file_path = derivatives_directory / "content_id_to_dandiset_paths.jsonl"
     with output_file_path.open(mode="w") as file_stream:
         for content_id in sorted(content_id_to_dandiset_paths):
             dandiset_paths = content_id_to_dandiset_paths[content_id]
             record = {
-                "content_id": content_id,
-                "dandisets": {
+                content_id: {
                     dandiset_id: sorted(dandiset_paths[dandiset_id]) for dandiset_id in sorted(dandiset_paths)
-                },
+                }
             }
             file_stream.write(f"{json.dumps(record)}\n")
 
