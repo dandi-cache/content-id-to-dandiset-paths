@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Cap on the number of asset entries to process (testing knob; output has at most this many records). Clear for a full run."
+        description: "Optional cap on the number of new items to process in this run."
         required: false
         type: number
         default: 10
