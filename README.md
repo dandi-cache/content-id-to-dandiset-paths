@@ -69,33 +69,3 @@ For example, through `crontab -e`, add:
 ```
 
 This will minimize data overhead by only loading the most recent changes.
-
-
-
-## How it works
-
-This cache demonstrates how generated results are kept off the code branch and records every update with full provenance.
-
-It uses three branches:
-
-- **`main`** holds only the code of the update logic, the runtime container definition, and the CI workflows (including building and distributing the container images).
-- **`derivatives`** is a persistent [DataLad](https://www.datalad.org/) dataset on its own branch. Each update is recorded there with `datalad containers-run`, so every revision carries full provenance of the exact command, the output diff, and the runtime container image digest.
-- **`dist`** is the lightweight publication artifact consumed by downstream users and preferred for one-time downloads.
-
-This cache is the first link in the DANDI cache chain: it has no upstream input dataset and no `sourcedata`. [`code/update.py`](code/update.py) reads the `assets.yaml` manifests for every Dandiset version directly from the public `dandiarchive` S3 bucket, extracts the content ID from each asset's S3 download URL, and aggregates the Dandiset paths per content ID.
-
-The processing runs inside a published container image (`ghcr.io/dandi-cache/content-id-to-dandiset-paths:latest`) that holds only the pinned runtime environment.
-
-The orchestration lives in [`code/update_pipeline.sh`](code/update_pipeline.sh); the actual cache logic lives in [`code/update.py`](code/update.py).
-
-The repository is described as a [BIDS study dataset](https://bids-specification.readthedocs.io/en/stable/common-principles.html#study-dataset) via [`dataset_description.json`](dataset_description.json) (`DatasetType: "study"`). Future enhancements may improve the provenance tracking through this mechanism in line with BEP028.
-
-
-
-### Local development
-
-The container image is the authoritative runtime, but you can recreate the environment locally with [uv](https://docs.astral.sh/uv/) for debugging:
-
-```bash
-uv run --project envs python code/update.py
-```
