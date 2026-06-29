@@ -25,13 +25,23 @@ import requests
 url = "https://raw.githubusercontent.com/dandi-cache/content-id-to-dandiset-paths/refs/heads/dist/derivatives/content_id_to_dandiset_paths.jsonl.gz"
 response = requests.get(url)
 lines = gzip.decompress(data=response.content).decode("utf-8").splitlines()
-content_id_to_dandiset_paths = [json.loads(line) for line in lines]
+content_id_to_dandiset_paths = {
+    content_id: dandiset_paths
+    for line in lines
+    for content_id, dandiset_paths in json.loads(line).items()
+}
 ```
 
 Each line is one JSON record mapping a content ID to the Dandisets and paths it appears at:
 
 ```json
 {"<content_id>": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
+```
+
+Merging the lines as above gives a single `dict` keyed by content ID:
+
+```python
+content_id_to_dandiset_paths["<content_id>"]  # -> {"<dandiset_id>": ["<path/in/dandiset>", "..."]}
 ```
 
 ### Save to file
