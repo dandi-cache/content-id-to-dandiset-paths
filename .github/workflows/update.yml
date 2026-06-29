@@ -13,6 +13,7 @@ on:
         description: "Optional cap on the number of new items to process in this run."
         required: false
         type: number
+        default: 10
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
