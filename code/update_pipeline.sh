@@ -64,14 +64,15 @@ fi
 
 git -C "${DS}" config user.name "${BOT_NAME}"
 git -C "${DS}" config user.email "${BOT_EMAIL}"
-mkdir -p "${DS}/derivatives"
-
-# Carry the study-level BIDS dataset_description.json (kept on the code branch) onto the
-# derivatives dataset so the published dataset is self-describing.
-cp "${WORKSPACE}/dataset_description.json" "${DS}/dataset_description.json"
-datalad save -d "${DS}" -m "Update dataset_description.json" dataset_description.json || true
 
 cd "${DS}"
+mkdir -p derivatives
+
+# Carry the study-level BIDS dataset_description.json (kept on the code branch) onto the
+# derivatives dataset so the published dataset is self-describing. This must be committed
+# before `containers-run`, which requires a clean dataset.
+cp "${WORKSPACE}/dataset_description.json" dataset_description.json
+datalad save -d "${DS}" -m "Update dataset_description.json" dataset_description.json
 
 # Pin the published image digest and register it as a container. Only the digest is stored
 # (a small text file), so the dataset stays annex-free; ghcr holds the image bytes.
