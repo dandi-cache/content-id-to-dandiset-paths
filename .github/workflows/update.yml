@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Cap on the number of asset manifests to process (testing knob; empty = full run)."
+        description: "Optional cap on the number of new items to process in this run."
         required: false
         type: number
 
