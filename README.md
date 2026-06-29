@@ -1,6 +1,6 @@
 # DANDI Cache: `content-id-to-dandiset-paths`
 
-A cache of the content ID relationship to the current Dandiset paths.
+Maps content ID relationship to current Dandiset paths.
 
 For each content ID (the identifier embedded in a blob's S3 download URL), this cache records every Dandiset and the path(s) within that Dandiset where an asset with that content currently lives.
 
