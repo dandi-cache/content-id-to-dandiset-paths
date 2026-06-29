@@ -10,9 +10,10 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Cap on the number of asset entries to process (testing knob; output has at most this many records). Empty = full run."
+        description: "Cap on the number of asset entries to process (testing knob; output has at most this many records). Clear for a full run."
         required: false
         type: number
+        default: 10
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
