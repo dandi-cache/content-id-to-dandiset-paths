@@ -26,14 +26,17 @@ def _build_s3_client() -> "botocore.client.BaseClient":
     return boto3.client("s3", region_name=_REGION, config=config)
 
 
-def _list_asset_manifest_keys(s3_client: "botocore.client.BaseClient", /) -> list[str]:
+def _list_asset_manifest_keys(s3_client: "botocore.client.BaseClient", limit: int | None = None) -> list[str]:
     paginator = s3_client.get_paginator("list_objects_v2")
-    keys = [
-        entry["Key"]
-        for page in paginator.paginate(Bucket=_BUCKET, Prefix=_ASSETS_PREFIX)
-        for entry in page.get("Contents", [])
-        if entry["Key"].endswith(_ASSETS_SUFFIX)
-    ]
+    keys: list[str] = []
+    for page in paginator.paginate(Bucket=_BUCKET, Prefix=_ASSETS_PREFIX):
+        for entry in page.get("Contents", []):
+            if entry["Key"].endswith(_ASSETS_SUFFIX):
+                keys.append(entry["Key"])
+                # Stop listing early when limited, so a small `--limit` test run stays fast and
+                # does not enumerate the entire `dandisets/` prefix.
+                if limit is not None and len(keys) >= limit:
+                    return sorted(keys)
     return sorted(keys)
 
 
@@ -57,10 +60,10 @@ def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[s
     return records
 
 
-def _run(base_directory: pathlib.Path, max_workers: int) -> None:
+def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> None:
     s3_client = _build_s3_client()
 
-    asset_manifest_keys = _list_asset_manifest_keys(s3_client)
+    asset_manifest_keys = _list_asset_manifest_keys(s3_client, limit=limit)
     if len(asset_manifest_keys) == 0:
         message = (
             f"\nNo `assets.yaml` manifests found under `s3://{_BUCKET}/{_ASSETS_PREFIX}`.\n"
@@ -113,6 +116,15 @@ if __name__ == "__main__":
         default=16,
         help="Number of concurrent S3 download workers used to fetch the asset manifests.",
     )
+    parser.add_argument(
+        "--limit",
+        type=int,
+        default=None,
+        help=(
+            "Optional cap on the number of `assets.yaml` manifests to process. Primarily a "
+            "testing knob for fast, partial runs; omit for a complete cache."
+        ),
+    )
     args = parser.parse_args()
 
-    _run(base_directory=args.base_directory, max_workers=args.max_workers)
+    _run(base_directory=args.base_directory, max_workers=args.max_workers, limit=args.limit)

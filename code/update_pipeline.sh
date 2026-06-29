@@ -28,6 +28,8 @@
 #   WORKSPACE   Path to the `main` checkout that holds the code (this repository).
 #   IMAGE       Container image reference to run the processing in.
 # Optional:
+#   LIMIT        Cap on the number of asset manifests update.py processes (testing knob for
+#                fast, partial runs). Empty/unset means a complete run.
 #   GITHUB_SHA   Recorded in the provenance message to link results to the code commit.
 #   RUNNER_TEMP  Scratch directory for the working clones (default: /tmp).
 set -euo pipefail
@@ -35,7 +37,14 @@ set -euo pipefail
 : "${REPO_URL:?REPO_URL must be set}"
 : "${WORKSPACE:?WORKSPACE must be set}"
 : "${IMAGE:?IMAGE must be set}"
+LIMIT="${LIMIT:-}"
 GITHUB_SHA="${GITHUB_SHA:-unknown}"
+
+# Only pass --limit when set, so a normal run processes the full archive.
+LIMIT_ARG=""
+if [ -n "${LIMIT}" ]; then
+  LIMIT_ARG="--limit ${LIMIT}"
+fi
 
 BOT_NAME="github-actions[bot]"
 BOT_EMAIL="github-actions[bot]@users.noreply.github.com"
@@ -91,7 +100,7 @@ datalad save -m "Pin runtime container image to ${DIGEST}" .datalad
 datalad containers-run -n pipeline \
   --output derivatives \
   -m "Update content-id-to-dandiset-paths (code @ ${GITHUB_SHA}; image ${DIGEST})" \
-  "python /code/update.py --base-directory /tmp"
+  "python /code/update.py --base-directory /tmp ${LIMIT_ARG}"
 
 # Publish the full results to the `derivatives` branch.
 git -C "${DS}" push "${REPO_URL}" HEAD:derivatives
