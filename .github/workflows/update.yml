@@ -65,7 +65,7 @@ jobs:
         env:
           REPO_URL: https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/${{ github.repository }}.git
           WORKSPACE: ${{ github.workspace }}
-          LIMIT: ${{ github.event.inputs.limit }}
+          LIMIT: ${{ github.event.inputs.limit || '2000' }}
           GITHUB_SHA: ${{ github.sha }}
           IMAGE: ghcr.io/dandi-cache/content-id-to-dandiset-paths:latest
         run: bash code/update_pipeline.sh
