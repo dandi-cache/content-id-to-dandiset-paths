@@ -26,18 +26,13 @@ def _build_s3_client() -> "botocore.client.BaseClient":
     return boto3.client("s3", region_name=_REGION, config=config)
 
 
-def _list_asset_manifest_keys(s3_client: "botocore.client.BaseClient", limit: int | None = None) -> list[str]:
+def _iter_asset_manifest_keys(s3_client: "botocore.client.BaseClient"):
+    """Yield every `assets.yaml` key under `dandisets/`, in lexicographic (S3 listing) order."""
     paginator = s3_client.get_paginator("list_objects_v2")
-    keys: list[str] = []
     for page in paginator.paginate(Bucket=_BUCKET, Prefix=_ASSETS_PREFIX):
         for entry in page.get("Contents", []):
             if entry["Key"].endswith(_ASSETS_SUFFIX):
-                keys.append(entry["Key"])
-                # Stop listing early when limited, so a small `--limit` test run stays fast and
-                # does not enumerate the entire `dandisets/` prefix.
-                if limit is not None and len(keys) >= limit:
-                    return sorted(keys)
-    return sorted(keys)
+                yield entry["Key"]
 
 
 def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[str, str, str]]:
@@ -60,13 +55,36 @@ def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[s
     return records
 
 
+def _collect_records(
+    s3_client: "botocore.client.BaseClient", max_workers: int, limit: int | None
+) -> list[tuple[str, str, str]]:
+    if limit is not None:
+        # Limited (testing) run: stream manifests one at a time and stop as soon as `limit`
+        # asset entries have been collected, so a small `--limit` yields a correspondingly
+        # small, fast output and does not enumerate the entire `dandisets/` prefix.
+        records: list[tuple[str, str, str]] = []
+        for key in _iter_asset_manifest_keys(s3_client):
+            records.extend(_get_info(s3_client, key))
+            if len(records) >= limit:
+                break
+        return records[:limit]
+
+    # Full run: fetch every manifest concurrently and aggregate all asset entries.
+    keys = sorted(_iter_asset_manifest_keys(s3_client))
+    records = []
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for manifest_records in executor.map(lambda key: _get_info(s3_client, key), keys):
+            records.extend(manifest_records)
+    return records
+
+
 def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> None:
     s3_client = _build_s3_client()
 
-    asset_manifest_keys = _list_asset_manifest_keys(s3_client, limit=limit)
-    if len(asset_manifest_keys) == 0:
+    records = _collect_records(s3_client, max_workers=max_workers, limit=limit)
+    if len(records) == 0:
         message = (
-            f"\nNo `assets.yaml` manifests found under `s3://{_BUCKET}/{_ASSETS_PREFIX}`.\n"
+            f"\nNo asset entries found under `s3://{_BUCKET}/{_ASSETS_PREFIX}`.\n"
             "The DANDI archive bucket may be unreachable or its layout may have changed.\n"
         )
         raise RuntimeError(message)
@@ -74,10 +92,8 @@ def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> N
     content_id_to_dandiset_paths: dict[str, dict[str, set[str]]] = collections.defaultdict(
         lambda: collections.defaultdict(set)
     )
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        for records in executor.map(lambda key: _get_info(s3_client, key), asset_manifest_keys):
-            for content_id, dandiset_id, path_in_dandiset in records:
-                content_id_to_dandiset_paths[content_id][dandiset_id].add(path_in_dandiset)
+    for content_id, dandiset_id, path_in_dandiset in records:
+        content_id_to_dandiset_paths[content_id][dandiset_id].add(path_in_dandiset)
 
     derivatives_directory = base_directory / "derivatives"
     derivatives_directory.mkdir(parents=True, exist_ok=True)
@@ -118,8 +134,9 @@ if __name__ == "__main__":
         type=int,
         default=None,
         help=(
-            "Optional cap on the number of `assets.yaml` manifests to process. Primarily a "
-            "testing knob for fast, partial runs; omit for a complete cache."
+            "Optional cap on the number of asset entries to process (the output has at most "
+            "this many records). Primarily a testing knob for fast, partial runs; omit for a "
+            "complete cache."
         ),
     )
     args = parser.parse_args()

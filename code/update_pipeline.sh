@@ -28,8 +28,9 @@
 #   WORKSPACE   Path to the `main` checkout that holds the code (this repository).
 #   IMAGE       Container image reference to run the processing in.
 # Optional:
-#   LIMIT        Cap on the number of asset manifests update.py processes (testing knob for
-#                fast, partial runs). Empty/unset means a complete run.
+#   LIMIT        Cap on the number of asset entries update.py processes (testing knob for
+#                fast, partial runs; output has at most this many records). Empty/unset means
+#                a complete run.
 #   GITHUB_SHA   Recorded in the provenance message to link results to the code commit.
 #   RUNNER_TEMP  Scratch directory for the working clones (default: /tmp).
 set -euo pipefail
