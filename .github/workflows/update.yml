@@ -17,35 +17,51 @@ on:
         type: boolean
         default: false
 
+# Serialize all runs of this workflow, across every ref: an in-progress update is never
+# cancelled, and a run triggered while one is executing waits in the queue. The Gate job
+# below then skips the queued run once it starts, because the update it would perform has
+# just been done; if the preceding run failed, the queued run proceeds as a fresh attempt.
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}
   cancel-in-progress: false
 
 env:
   GITHUB_TOKEN: ${{ secrets._GITHUB_API_KEY }}
 
 jobs:
+  Gate:
+    permissions: {}
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+    steps:
+      - name: Skip if an update already completed while this run was queued
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets._GITHUB_API_KEY }}
+        run: |
+          CREATED_AT=$(gh run view "${{ github.run_id }}" --repo "${{ github.repository }}" --json createdAt --jq '.createdAt')
+          LAST_SUCCESS_AT=$(gh run list --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --status success --limit 1 --json updatedAt --jq '.[0].updatedAt // empty')
+
+          # ISO 8601 UTC timestamps compare correctly as strings. A successful run that
+          # finished after this run was triggered means this run spent its life queued
+          # behind it and would only repeat the same update.
+          if [ -n "${LAST_SUCCESS_AT}" ] && [ "${LAST_SUCCESS_AT}" \> "${CREATED_AT}" ]; then
+            echo "An update succeeded at ${LAST_SUCCESS_AT}, after this run was triggered at ${CREATED_AT}; skipping the redundant run."
+            echo "should-run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "should-run=true" >> "$GITHUB_OUTPUT"
+          fi
+
   Update:
+    needs: [ Gate ]
+    if: ${{ needs.Gate.outputs.should-run == 'true' }}
     permissions:
-      actions: write
       contents: read
       packages: read
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check for running workflows
-        env:
-          GH_TOKEN: ${{ secrets._GITHUB_API_KEY }}
-        run: |
-          RUNNING_COUNT=$(gh run list --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --status in_progress --json databaseId | jq '. | length')
-
-          if [ "$RUNNING_COUNT" -gt 1 ]; then
-            echo "Another run is already in progress. Cancelling this run..."
-            gh run cancel --repo "${{ github.repository }}" ${{ github.run_id }}
-            # Sleep to allow cancellation to propagate
-            sleep 60
-          fi
-
       - name: Checkout
         uses: actions/checkout@v7
         with:
@@ -76,7 +92,7 @@ jobs:
 
   NotifyOnFailure:
     runs-on: ubuntu-latest
-    needs: [ Update ]
+    needs: [ Gate, Update ]
     if: ${{ always() && failure() }}
     permissions: {}
     steps:
