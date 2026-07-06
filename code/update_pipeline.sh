@@ -31,9 +31,9 @@
 #   WORKSPACE   Path to the `main` checkout that holds the code (this repository).
 #   IMAGE       Container image reference to run the processing in.
 # Optional:
-#   LIMIT        Cap on the number of asset entries update.py processes (testing knob for
-#                fast, partial runs; output has at most this many records). Empty/unset means
-#                a complete run.
+#   TESTING      Set to "true" to run update.py in testing mode: it processes only ten asset
+#                entries and reads/writes derivatives/testing.jsonl, leaving the real cache
+#                untouched. Empty/unset means a complete run.
 #   GITHUB_SHA   Recorded in the provenance message to link results to the code commit.
 #   RUNNER_TEMP  Scratch directory for the working clones (default: /tmp).
 set -euo pipefail
@@ -41,13 +41,13 @@ set -euo pipefail
 : "${REPO_URL:?REPO_URL must be set}"
 : "${WORKSPACE:?WORKSPACE must be set}"
 : "${IMAGE:?IMAGE must be set}"
-LIMIT="${LIMIT:-}"
+TESTING="${TESTING:-}"
 GITHUB_SHA="${GITHUB_SHA:-unknown}"
 
-# Only pass --limit when set, so a normal run processes the full archive.
-LIMIT_ARG=""
-if [ -n "${LIMIT}" ]; then
-  LIMIT_ARG="--limit ${LIMIT}"
+# Only pass --testing when requested, so a normal run processes the full archive.
+TESTING_ARG=""
+if [ "${TESTING}" = "true" ]; then
+  TESTING_ARG="--testing"
 fi
 
 BOT_NAME="github-actions[bot]"
@@ -104,15 +104,19 @@ datalad save -m "Pin runtime container image to ${DIGEST}" .datalad
 datalad containers-run -n pipeline \
   --output derivatives \
   -m "Update content-id-to-dandiset-paths (code @ ${GITHUB_SHA}; image ${DIGEST})" \
-  "python /code/update.py --base-directory /tmp ${LIMIT_ARG}"
+  "python /code/update.py --base-directory /tmp ${TESTING_ARG}"
 
 # Publish the full results to the `derivatives` branch.
 git -C "${DS}" push "${REPO_URL}" HEAD:derivatives
 
-# Build and force-publish the consumer-facing `dist` artifact from a fresh repo.
+# Build and force-publish the consumer-facing `dist` artifact from a fresh repo. Only the real
+# cache is published; a testing.jsonl(.gz) left by a testing run never reaches consumers. (The
+# guard only matters when a testing run precedes the first ever complete run.)
 uv run --project "${WORKSPACE}/envs" python "${WORKSPACE}/code/compress.py" --base-directory "${DS}"
 mkdir -p "${DISTDIR}/derivatives"
-cp "${DS}"/derivatives/*.jsonl.gz "${DISTDIR}/derivatives/"
+if [ -f "${DS}/derivatives/content_id_to_dandiset_paths.jsonl.gz" ]; then
+  cp "${DS}/derivatives/content_id_to_dandiset_paths.jsonl.gz" "${DISTDIR}/derivatives/"
+fi
 cp "${WORKSPACE}/dataset_description.json" "${DISTDIR}/dataset_description.json"
 git -C "${DISTDIR}" init -q -b dist
 git -C "${DISTDIR}" config user.name "${BOT_NAME}"

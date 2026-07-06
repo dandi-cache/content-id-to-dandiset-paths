@@ -9,13 +9,13 @@ on:
     - cron: "0 0/2 * * *"  # Every two hours.
   workflow_dispatch:
     inputs:
-      limit:
-        # The cache is accumulative: every run merges the fresh S3 state into the previous cache,
-        # so a limited run only refreshes the first N asset entries -- existing entries are
-        # retained either way. Only set this to dev-test changes; leave empty for a real update.
-        description: "Dev-testing only: cap the run at this many fresh asset entries (existing cache entries are retained). Leave empty for a complete update."
+      testing:
+        # A testing run processes only ten asset entries and reads/writes
+        # derivatives/testing.jsonl, so the real cache is never touched.
+        description: "Testing mode: process only ten asset entries and write to derivatives/testing.jsonl instead of the real cache."
         required: false
-        type: number
+        type: boolean
+        default: false
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -67,9 +67,9 @@ jobs:
         env:
           REPO_URL: https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/${{ github.repository }}.git
           WORKSPACE: ${{ github.workspace }}
-          # Empty for scheduled and plain manual runs (complete update); only set when a
-          # dev-test limit is explicitly entered on workflow_dispatch.
-          LIMIT: ${{ github.event.inputs.limit }}
+          # Empty for scheduled runs and "false" for plain manual runs (complete update);
+          # only "true" when testing mode is explicitly selected on workflow_dispatch.
+          TESTING: ${{ github.event.inputs.testing }}
           GITHUB_SHA: ${{ github.sha }}
           IMAGE: ghcr.io/dandi-cache/content-id-to-dandiset-paths:latest
         run: bash code/update_pipeline.sh

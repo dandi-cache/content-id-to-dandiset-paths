@@ -19,6 +19,12 @@ _REGION = "us-east-2"
 _ASSETS_PREFIX = "dandisets/"
 _ASSETS_SUFFIX = "/assets.yaml"
 
+# Testing mode processes only this many asset entries and writes to its own designated file
+# (`derivatives/testing.jsonl`), leaving the real cache untouched.
+_TESTING_LIMIT = 10
+_CACHE_FILE_NAME = "content_id_to_dandiset_paths.jsonl"
+_TESTING_FILE_NAME = "testing.jsonl"
+
 
 def _build_s3_client() -> "botocore.client.BaseClient":
     # `dandiarchive` is a public bucket, so requests are sent unsigned (anonymous).
@@ -56,18 +62,18 @@ def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[s
 
 
 def _collect_records(
-    s3_client: "botocore.client.BaseClient", max_workers: int, limit: int | None
+    s3_client: "botocore.client.BaseClient", max_workers: int, testing: bool
 ) -> list[tuple[str, str, str]]:
-    if limit is not None:
-        # Limited (testing) run: stream manifests one at a time and stop as soon as `limit`
-        # asset entries have been collected, so a small `--limit` yields a correspondingly
-        # small, fast output and does not enumerate the entire `dandisets/` prefix.
+    if testing:
+        # Testing run: stream manifests one at a time and stop as soon as `_TESTING_LIMIT`
+        # asset entries have been collected, so the run is fast and does not enumerate the
+        # entire `dandisets/` prefix.
         records: list[tuple[str, str, str]] = []
         for key in _iter_asset_manifest_keys(s3_client):
             records.extend(_get_info(s3_client, key))
-            if len(records) >= limit:
+            if len(records) >= _TESTING_LIMIT:
                 break
-        return records[:limit]
+        return records[:_TESTING_LIMIT]
 
     # Full run: fetch every manifest concurrently and aggregate all asset entries.
     keys = sorted(_iter_asset_manifest_keys(s3_client))
@@ -91,10 +97,10 @@ def _load_previous_cache(cache_file_path: pathlib.Path) -> dict[str, dict[str, l
     return previous_cache
 
 
-def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> None:
+def _run(base_directory: pathlib.Path, max_workers: int, testing: bool) -> None:
     s3_client = _build_s3_client()
 
-    records = _collect_records(s3_client, max_workers=max_workers, limit=limit)
+    records = _collect_records(s3_client, max_workers=max_workers, testing=testing)
     if len(records) == 0:
         message = (
             f"\nNo asset entries found under `s3://{_BUCKET}/{_ASSETS_PREFIX}`.\n"
@@ -108,7 +114,9 @@ def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> N
 
     derivatives_directory = base_directory / "derivatives"
     derivatives_directory.mkdir(parents=True, exist_ok=True)
-    output_file_path = derivatives_directory / "content_id_to_dandiset_paths.jsonl"
+    # Testing runs read from and write to their own designated file, so the real cache is
+    # never touched.
+    output_file_path = derivatives_directory / (_TESTING_FILE_NAME if testing else _CACHE_FILE_NAME)
 
     # The cache is accumulative: the pipeline runs on a clone of the persistent `derivatives`
     # branch, so the previous run's cache is already present here. Seed the mapping with it before
@@ -154,15 +162,14 @@ if __name__ == "__main__":
         help="Number of concurrent S3 download workers used to fetch the asset manifests.",
     )
     parser.add_argument(
-        "--limit",
-        type=int,
-        default=None,
+        "--testing",
+        action="store_true",
         help=(
-            "Optional cap on the number of fresh asset entries to process from S3. The results "
-            "still merge into the previous cache, so existing entries are retained. Primarily a "
-            "testing knob for fast, partial runs; omit for a complete update."
+            f"Run in testing mode: process only the first {_TESTING_LIMIT} asset entries from S3 "
+            f"and read/write `derivatives/{_TESTING_FILE_NAME}` instead of the real cache, "
+            "leaving it untouched. Omit for a complete update."
         ),
     )
     args = parser.parse_args()
 
-    _run(base_directory=args.base_directory, max_workers=args.max_workers, limit=args.limit)
+    _run(base_directory=args.base_directory, max_workers=args.max_workers, testing=args.testing)
