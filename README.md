@@ -1,8 +1,10 @@
 # DANDI Cache: `content-id-to-dandiset-paths`
 
-Maps content ID relationship to current Dandiset paths.
+Maps content ID relationship to Dandiset paths, accumulated over time.
 
-For each content ID (the identifier embedded in a blob's S3 download URL), this cache records every Dandiset and the path(s) within that Dandiset where an asset with that content currently lives.
+For each content ID (the identifier embedded in a blob's S3 download URL), this cache records every Dandiset and the path(s) within that Dandiset where an asset with that content has been seen.
+
+The cache is accumulative: each update merges the current state of the DANDI archive into the previous state of the cache, so new Dandisets and paths are added when first seen and existing entries are retained even if they later disappear upstream — the cache tracks everywhere content has ever lived for as long as the cache exists.
 
 Updated frequently.
 
@@ -32,7 +34,7 @@ content_id_to_dandiset_paths = {
 }
 ```
 
-Each line is one JSON record mapping a content ID to the Dandisets and paths it appears at:
+Each line is one JSON record mapping a content ID to the Dandisets and paths it has been seen at:
 
 ```json
 {"<content_id>": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
