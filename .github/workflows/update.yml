@@ -10,10 +10,12 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Optional cap on the number of new items to process in this run. Clear the field for a complete run."
+        # The pipeline is not incremental: every run regenerates the full cache from scratch, so a
+        # limited run produces a truncated output, not a partial addition. Only set this to
+        # dev-test changes; leave empty for a real update.
+        description: "Dev-testing only: cap the run at this many asset entries (produces a truncated output). Leave empty for a complete update."
         required: false
         type: number
-        default: 10
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -65,9 +67,9 @@ jobs:
         env:
           REPO_URL: https://x-access-token:${{ secrets._GITHUB_API_KEY }}@github.com/${{ github.repository }}.git
           WORKSPACE: ${{ github.workspace }}
-          # Scheduled runs must process the full archive: an empty LIMIT means no cap.
-          # Only manual (workflow_dispatch) runs pass a limit, as a testing knob.
-          LIMIT: ${{ github.event.inputs.limit || '' }}
+          # Empty for scheduled and plain manual runs (complete update); only set when a
+          # dev-test limit is explicitly entered on workflow_dispatch.
+          LIMIT: ${{ github.event.inputs.limit }}
           GITHUB_SHA: ${{ github.sha }}
           IMAGE: ghcr.io/dandi-cache/content-id-to-dandiset-paths:latest
         run: bash code/update_pipeline.sh
