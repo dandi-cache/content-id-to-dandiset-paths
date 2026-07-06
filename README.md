@@ -1,8 +1,10 @@
 # DANDI Cache: `content-id-to-dandiset-paths`
 
-Maps content ID relationship to current Dandiset paths.
+Maps content ID relationship to Dandiset paths, accumulated over time.
 
-For each content ID (the identifier embedded in a blob's S3 download URL), this cache records every Dandiset and the path(s) within that Dandiset where an asset with that content currently lives.
+For each content ID (the identifier embedded in a blob's S3 download URL), this cache records every Dandiset and the path(s) within that Dandiset where an asset with that content has been seen.
+
+The cache is accumulative: each update merges the current state of the DANDI archive into the previous state of the cache, so new Dandisets and paths are added when first seen and existing entries are retained even if they later disappear upstream — the cache tracks everywhere content has ever lived for as long as the cache exists.
 
 Updated frequently.
 
@@ -32,23 +34,11 @@ content_id_to_dandiset_paths = {
 }
 ```
 
-Each line is one JSON record mapping a content ID to the Dandisets and paths it appears at:
+Each line is one JSON record mapping a content ID to the Dandisets and paths it has been seen at:
 
 ```json
 {"<content_id>": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
 ```
-
-## Change history
-
-Each update also diffs the fresh snapshot against the previous one and appends the deltas to an accumulating change log, `derivatives/changes.jsonl` (also available compressed on the `dist` branch as `derivatives/changes.jsonl.gz`), so changes to the mapping are tracked explicitly for as long as the cache lives.
-
-Each line is one JSON record describing one content ID whose mapping changed during one update:
-
-```json
-{"timestamp": "<UTC ISO 8601 time of the update>", "content_id": "<content_id>", "change": "added|removed|changed", "previous": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}, "current": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
-```
-
-`previous` is `null` for `added` records and `current` is `null` for `removed` records. All records from the same update share the same timestamp. The log begins at the first update after the cache was bootstrapped; the full commit-level history of every snapshot is additionally retained on the `derivatives` branch.
 
 ### Save to file
 

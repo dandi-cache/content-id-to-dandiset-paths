@@ -10,12 +10,10 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        # The pipeline is not incremental: every run regenerates the full cache from scratch, so a
-        # limited run produces a truncated output, not a partial addition. A limited run also
-        # skips change tracking and marks the snapshot as truncated (`derivatives/.truncated`),
-        # so the next full run re-baselines `changes.jsonl` instead of logging spurious diffs.
-        # Only set this to dev-test changes; leave empty for a real update.
-        description: "Dev-testing only: cap the run at this many asset entries (produces a truncated output). Leave empty for a complete update."
+        # The cache is accumulative: every run merges the fresh S3 state into the previous cache,
+        # so a limited run only refreshes the first N asset entries -- existing entries are
+        # retained either way. Only set this to dev-test changes; leave empty for a real update.
+        description: "Dev-testing only: cap the run at this many fresh asset entries (existing cache entries are retained). Leave empty for a complete update."
         required: false
         type: number
 

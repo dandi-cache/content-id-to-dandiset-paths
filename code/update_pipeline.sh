@@ -8,9 +8,10 @@
 #                   into scratch. The processing is recorded there with
 #                   `datalad containers-run`, so every update carries full provenance (the
 #                   command, the output diff, and the container image digest) and history is
-#                   retained. Because the clone carries the previous run's snapshot,
-#                   update.py also diffs against it and appends the deltas to
-#                   derivatives/changes.jsonl -- an explicit, accumulating change log.
+#                   retained. Because the clone carries the previous run's cache,
+#                   update.py merges the fresh S3 state into it: new Dandiset IDs and
+#                   paths are added when first seen and existing entries are never
+#                   dropped, so the cache accumulates for as long as it lives.
 #   - `dist`        is the lightweight, force-recreated publication artifact consumed by
 #                   downstream users (see README.md).
 #
