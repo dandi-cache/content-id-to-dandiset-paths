@@ -84,12 +84,12 @@ def _collect_records(
     return records
 
 
-def _load_previous_cache(cache_file_path: pathlib.Path) -> dict[str, dict[str, list[str]]] | None:
-    """Read the previous run's cache back into memory, or return None on a bootstrap run."""
-    if not cache_file_path.exists():
-        return None
-
+def _load_previous_cache(cache_file_path: pathlib.Path) -> dict[str, dict[str, list[str]]]:
+    """Read the previous run's cache back into memory (empty on a bootstrap run)."""
     previous_cache: dict[str, dict[str, list[str]]] = {}
+    if not cache_file_path.exists():
+        return previous_cache
+
     with cache_file_path.open() as file_stream:
         for line in file_stream:
             if stripped_line := line.strip():
@@ -123,10 +123,9 @@ def _run(base_directory: pathlib.Path, max_workers: int, testing: bool) -> None:
     # folding in the fresh S3 state, so new Dandiset IDs and paths are added when first seen and
     # entries that have since disappeared upstream are retained for as long as the cache lives.
     previous_cache = _load_previous_cache(output_file_path)
-    if previous_cache is not None:
-        for content_id, dandiset_paths in previous_cache.items():
-            for dandiset_id, paths_in_dandiset in dandiset_paths.items():
-                content_id_to_dandiset_paths[content_id][dandiset_id].update(paths_in_dandiset)
+    for content_id, dandiset_paths in previous_cache.items():
+        for dandiset_id, paths_in_dandiset in dandiset_paths.items():
+            content_id_to_dandiset_paths[content_id][dandiset_id].update(paths_in_dandiset)
 
     for content_id, dandiset_id, path_in_dandiset in records:
         content_id_to_dandiset_paths[content_id][dandiset_id].add(path_in_dandiset)
