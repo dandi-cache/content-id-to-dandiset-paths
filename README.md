@@ -38,6 +38,18 @@ Each line is one JSON record mapping a content ID to the Dandisets and paths it 
 {"<content_id>": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
 ```
 
+## Change history
+
+Each update also diffs the fresh snapshot against the previous one and appends the deltas to an accumulating change log, `derivatives/changes.jsonl` (also available compressed on the `dist` branch as `derivatives/changes.jsonl.gz`), so changes to the mapping are tracked explicitly for as long as the cache lives.
+
+Each line is one JSON record describing one content ID whose mapping changed during one update:
+
+```json
+{"timestamp": "<UTC ISO 8601 time of the update>", "content_id": "<content_id>", "change": "added|removed|changed", "previous": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}, "current": {"<dandiset_id>": ["<path/in/dandiset>", "..."]}}
+```
+
+`previous` is `null` for `added` records and `current` is `null` for `removed` records. All records from the same update share the same timestamp. The log begins at the first update after the cache was bootstrapped; the full commit-level history of every snapshot is additionally retained on the `derivatives` branch.
+
 ### Save to file
 
 ```bash

@@ -1,6 +1,7 @@
 import argparse
 import collections
 import concurrent.futures
+import datetime
 import json
 import pathlib
 
@@ -78,6 +79,59 @@ def _collect_records(
     return records
 
 
+def _load_previous_snapshot(snapshot_file_path: pathlib.Path) -> dict[str, dict[str, list[str]]] | None:
+    """Read the previous run's snapshot back into memory, or return None on a bootstrap run."""
+    if not snapshot_file_path.exists():
+        return None
+
+    previous_snapshot: dict[str, dict[str, list[str]]] = {}
+    with snapshot_file_path.open() as file_stream:
+        for line in file_stream:
+            if stripped_line := line.strip():
+                previous_snapshot.update(json.loads(stripped_line))
+    return previous_snapshot
+
+
+def _append_changes(
+    changes_file_path: pathlib.Path,
+    previous_snapshot: dict[str, dict[str, list[str]]],
+    current_snapshot: dict[str, dict[str, list[str]]],
+) -> int:
+    """Append one change record per content ID whose mapping differs from the previous run.
+
+    Each record is one JSON value per line:
+    `{"timestamp": ..., "content_id": ..., "change": "added"|"removed"|"changed", "previous": ..., "current": ...}`
+    where `previous`/`current` hold the full `{"<dandiset_id>": ["<path>", ...]}` mapping
+    (null on the side where the content ID does not exist). All records from one run share
+    the same timestamp. Returns the number of records appended.
+    """
+    timestamp = datetime.datetime.now(tz=datetime.timezone.utc).isoformat(timespec="seconds")
+
+    change_records = []
+    for content_id in sorted(previous_snapshot.keys() | current_snapshot.keys()):
+        previous = previous_snapshot.get(content_id)
+        current = current_snapshot.get(content_id)
+        if previous == current:
+            continue
+
+        change = "added" if previous is None else "removed" if current is None else "changed"
+        change_records.append(
+            {
+                "timestamp": timestamp,
+                "content_id": content_id,
+                "change": change,
+                "previous": previous,
+                "current": current,
+            }
+        )
+
+    if len(change_records) > 0:
+        with changes_file_path.open(mode="a") as file_stream:
+            for change_record in change_records:
+                file_stream.write(f"{json.dumps(change_record)}\n")
+    return len(change_records)
+
+
 def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> None:
     s3_client = _build_s3_client()
 
@@ -95,18 +149,55 @@ def _run(base_directory: pathlib.Path, max_workers: int, limit: int | None) -> N
     for content_id, dandiset_id, path_in_dandiset in records:
         content_id_to_dandiset_paths[content_id][dandiset_id].add(path_in_dandiset)
 
+    # Normalize into the exact structure written to (and read back from) the snapshot file, so
+    # diffing against the previous run is a plain per-content-ID equality check.
+    current_snapshot = {
+        content_id: {
+            dandiset_id: sorted(content_id_to_dandiset_paths[content_id][dandiset_id])
+            for dandiset_id in sorted(content_id_to_dandiset_paths[content_id])
+        }
+        for content_id in sorted(content_id_to_dandiset_paths)
+    }
+
     derivatives_directory = base_directory / "derivatives"
     derivatives_directory.mkdir(parents=True, exist_ok=True)
+    snapshot_file_path = derivatives_directory / "content_id_to_dandiset_paths.jsonl"
+
+    # The pipeline runs on a clone of the persistent `derivatives` branch, so the previous run's
+    # snapshot is already present here. Diff against it before overwriting, appending the deltas
+    # to `changes.jsonl` so the cache carries an explicit change history for as long as it lives.
+    # Skipped on a bootstrap run (the initial snapshot itself is the baseline), on limited
+    # (testing) runs (their truncated snapshot would only log noise), and on the first full run
+    # after a limited run (diffing against the truncated snapshot would log every entry it
+    # dropped as a spurious change) -- the `.truncated` marker carries that last state between
+    # runs on the `derivatives` branch.
+    truncated_marker_file_path = derivatives_directory / ".truncated"
+    if limit is not None:
+        truncated_marker_file_path.write_text(
+            "The snapshot was last written by a limited (testing) run and is truncated.\n"
+            "The next full run re-baselines change tracking instead of diffing against it.\n"
+        )
+    elif truncated_marker_file_path.exists():
+        print("The previous snapshot was truncated by a limited run; re-baselining change tracking.")
+        truncated_marker_file_path.unlink()
+    else:
+        previous_snapshot = _load_previous_snapshot(snapshot_file_path)
+        if previous_snapshot is not None:
+            changes_file_path = derivatives_directory / "changes.jsonl"
+            number_of_changes = _append_changes(
+                changes_file_path=changes_file_path,
+                previous_snapshot=previous_snapshot,
+                current_snapshot=current_snapshot,
+            )
+            if number_of_changes > 0:
+                print(f"Appended {number_of_changes} change record(s) to {changes_file_path}.")
+            else:
+                print("No changes since the previous snapshot.")
 
     # One JSON value per line: `{"<content_id>": {"<dandiset_id>": ["<path>", ...]}}`.
-    output_file_path = derivatives_directory / "content_id_to_dandiset_paths.jsonl"
-    with output_file_path.open(mode="w") as file_stream:
-        for content_id in sorted(content_id_to_dandiset_paths):
-            dandiset_paths = content_id_to_dandiset_paths[content_id]
-            record = {
-                content_id: {dandiset_id: sorted(dandiset_paths[dandiset_id]) for dandiset_id in sorted(dandiset_paths)}
-            }
-            file_stream.write(f"{json.dumps(record)}\n")
+    with snapshot_file_path.open(mode="w") as file_stream:
+        for content_id, dandiset_paths in current_snapshot.items():
+            file_stream.write(f"{json.dumps({content_id: dandiset_paths})}\n")
 
 
 if __name__ == "__main__":
