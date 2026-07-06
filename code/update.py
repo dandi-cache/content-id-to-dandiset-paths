@@ -1,6 +1,7 @@
 import argparse
 import collections
 import concurrent.futures
+import functools
 import json
 import pathlib
 
@@ -33,9 +34,15 @@ _CACHE_FILE_NAME = "content_id_to_dandiset_paths.jsonl"
 _TESTING_FILE_NAME = "testing.jsonl"
 
 
-def _build_s3_client() -> "botocore.client.BaseClient":
-    # `dandiarchive` is a public bucket, so requests are sent unsigned (anonymous).
-    config = botocore.config.Config(signature_version=botocore.UNSIGNED)
+def _build_s3_client(max_pool_connections: int = 10) -> "botocore.client.BaseClient":
+    # `dandiarchive` is a public bucket, so requests are sent unsigned (anonymous). The
+    # connection pool must hold one connection per download worker, or the surplus workers
+    # redo the TCP/TLS handshake on every request.
+    config = botocore.config.Config(
+        signature_version=botocore.UNSIGNED,
+        max_pool_connections=max_pool_connections,
+        retries={"mode": "standard"},
+    )
     return boto3.client("s3", region_name=_REGION, config=config)
 
 
@@ -56,7 +63,7 @@ def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[s
         # Embargoed Dandisets list their manifests in the public bucket but deny anonymous reads
         # (AccessDenied); a manifest can also be deleted between listing and fetching (NoSuchKey).
         # Both are expected upstream states, not pipeline failures, so skip the manifest.
-        if error_code in ("AccessDenied", "NoSuchKey", "403", "404"):
+        if error_code in ("AccessDenied", "NoSuchKey"):
             print(f"Skipping inaccessible manifest `{key}` ({error_code}).", flush=True)
             return []
         raise
@@ -94,10 +101,10 @@ def _collect_records(
         return records[:_TESTING_LIMIT]
 
     # Full run: fetch every manifest concurrently and aggregate all asset entries.
-    keys = sorted(_iter_asset_manifest_keys(s3_client))
     records = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        for manifest_records in executor.map(lambda key: _get_info(s3_client, key), keys):
+        get_info = functools.partial(_get_info, s3_client)
+        for manifest_records in executor.map(get_info, _iter_asset_manifest_keys(s3_client)):
             records.extend(manifest_records)
     return records
 
@@ -116,7 +123,7 @@ def _load_previous_cache(cache_file_path: pathlib.Path) -> dict[str, dict[str, l
 
 
 def _run(base_directory: pathlib.Path, max_workers: int, testing: bool) -> None:
-    s3_client = _build_s3_client()
+    s3_client = _build_s3_client(max_pool_connections=max_workers)
 
     records = _collect_records(s3_client, max_workers=max_workers, testing=testing)
     if len(records) == 0:

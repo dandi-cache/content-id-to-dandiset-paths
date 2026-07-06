@@ -5,9 +5,14 @@ import shutil
 
 
 def _compress(file_path: pathlib.Path, /) -> None:
-
     compressed_file_path = file_path.parent / f"{file_path.name}.gz"
-    with file_path.open(mode="rb") as source_stream, gzip.open(compressed_file_path, mode="wb") as target_stream:
+    # `mtime=0` keeps the gzip header timestamp-free, so unchanged input compresses to a
+    # byte-identical artifact run after run.
+    with (
+        file_path.open(mode="rb") as source_stream,
+        compressed_file_path.open(mode="wb") as raw_target_stream,
+        gzip.GzipFile(fileobj=raw_target_stream, mode="wb", mtime=0) as target_stream,
+    ):
         shutil.copyfileobj(fsrc=source_stream, fdst=target_stream)
 
 
