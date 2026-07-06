@@ -20,7 +20,7 @@
 # dataset (a small text file), so it stays annex-free and ghcr holds the bytes.
 #
 # This cache is the first link in the DANDI cache chain: it has no upstream input dataset and
-# no `sourcedata`. code/update.py pulls the DANDI archive `assets.yaml` manifests directly
+# no `sourcedata`. code/update.py pulls the DANDI archive asset manifests directly
 # from public S3 at run time, so the container only needs outbound network access.
 #
 # code/update.py and code/compress.py are the actual code and run in any environment; this

@@ -12,13 +12,22 @@ import yaml
 
 # This cache is the first link in the DANDI cache chain: it has no upstream `sourcedata` and
 # instead pulls its inputs directly from the public DANDI archive S3 bucket. Each Dandiset
-# version publishes an `assets.yaml` manifest under `dandisets/<dandiset_id>/<version>/`; the
-# manifest lists every asset with its `path` (within the Dandiset) and its `contentUrl`s (the
+# version publishes asset manifests under `dandisets/<dandiset_id>/<version>/`; a manifest
+# lists every asset with its `path` (within the Dandiset) and its `contentUrl`s (the
 # second of which is the S3 download URL that embeds the content ID).
+#
+# The same manifest is published as both `assets.jsonld` and `assets.yaml`. JSON parses orders
+# of magnitude faster than YAML (the ~2 GB of YAML across the archive costs the better part of
+# an hour of GIL-bound CPU), so `assets.jsonld` is preferred; only a couple of old published
+# versions lack it and fall back to `assets.yaml`.
 _BUCKET = "dandiarchive"
 _REGION = "us-east-2"
 _ASSETS_PREFIX = "dandisets/"
-_ASSETS_SUFFIX = "/assets.yaml"
+_ASSETS_JSON_BASENAME = "assets.jsonld"
+_ASSETS_YAML_BASENAME = "assets.yaml"
+
+# The C-accelerated loader (~6x faster) when PyYAML was built against libyaml, else pure Python.
+_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 # Testing mode processes only this many asset entries and writes to its own designated file
 # (`derivatives/testing.jsonl`), leaving the real cache untouched.
@@ -34,12 +43,19 @@ def _build_s3_client() -> "botocore.client.BaseClient":
 
 
 def _iter_asset_manifest_keys(s3_client: "botocore.client.BaseClient"):
-    """Yield every `assets.yaml` key under `dandisets/`, in lexicographic (S3 listing) order."""
+    """Yield one asset manifest key per Dandiset version: `assets.jsonld`, or `assets.yaml` when
+    that is the only manifest published."""
+    manifest_basenames_by_version: dict[str, set[str]] = {}
     paginator = s3_client.get_paginator("list_objects_v2")
     for page in paginator.paginate(Bucket=_BUCKET, Prefix=_ASSETS_PREFIX):
         for entry in page.get("Contents", []):
-            if entry["Key"].endswith(_ASSETS_SUFFIX):
-                yield entry["Key"]
+            version_directory, _, basename = entry["Key"].rpartition("/")
+            if basename in (_ASSETS_JSON_BASENAME, _ASSETS_YAML_BASENAME):
+                manifest_basenames_by_version.setdefault(version_directory, set()).add(basename)
+
+    for version_directory, basenames in sorted(manifest_basenames_by_version.items()):
+        basename = _ASSETS_JSON_BASENAME if _ASSETS_JSON_BASENAME in basenames else _ASSETS_YAML_BASENAME
+        yield f"{version_directory}/{basename}"
 
 
 def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[str, str, str]]:
@@ -54,9 +70,13 @@ def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[s
             print(f"Skipping inaccessible manifest `{key}` ({error_code}).", flush=True)
             return []
         raise
-    all_asset_metadata = yaml.safe_load(stream=response["Body"].read()) or []
+    body = response["Body"].read()
+    if key.endswith(_ASSETS_JSON_BASENAME):
+        all_asset_metadata = json.loads(body) if body.strip() else []
+    else:
+        all_asset_metadata = yaml.load(body, Loader=_YAML_LOADER) or []
 
-    # Key layout: `dandisets/<dandiset_id>/<version>/assets.yaml`.
+    # Key layout: `dandisets/<dandiset_id>/<version>/<manifest basename>`.
     dandiset_id = key.split("/")[1]
 
     records: list[tuple[str, str, str]] = []
