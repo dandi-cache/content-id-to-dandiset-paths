@@ -7,6 +7,7 @@ import pathlib
 import boto3
 import botocore
 import botocore.config
+import botocore.exceptions
 import yaml
 
 # This cache is the first link in the DANDI cache chain: it has no upstream `sourcedata` and
@@ -42,7 +43,17 @@ def _iter_asset_manifest_keys(s3_client: "botocore.client.BaseClient"):
 
 
 def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[str, str, str]]:
-    response = s3_client.get_object(Bucket=_BUCKET, Key=key)
+    try:
+        response = s3_client.get_object(Bucket=_BUCKET, Key=key)
+    except botocore.exceptions.ClientError as error:
+        error_code = error.response.get("Error", {}).get("Code", "")
+        # Embargoed Dandisets list their manifests in the public bucket but deny anonymous reads
+        # (AccessDenied); a manifest can also be deleted between listing and fetching (NoSuchKey).
+        # Both are expected upstream states, not pipeline failures, so skip the manifest.
+        if error_code in ("AccessDenied", "NoSuchKey", "403", "404"):
+            print(f"Skipping inaccessible manifest `{key}` ({error_code}).", flush=True)
+            return []
+        raise
     all_asset_metadata = yaml.safe_load(stream=response["Body"].read()) or []
 
     # Key layout: `dandisets/<dandiset_id>/<version>/assets.yaml`.
