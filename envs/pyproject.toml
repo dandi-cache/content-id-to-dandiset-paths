@@ -5,8 +5,7 @@ requires-python = ">=3.13"
 dependencies = [
     "datalad",
     "datalad-container",
-    # Processing dependencies used by code/update.py: it reads the DANDI archive's
-    # `assets.yaml` manifests directly from public S3.
+    # Processing dependency used by code/update.py: it reads the DANDI archive's
+    # `assets.jsonld` manifests directly from public S3.
     "boto3",
-    "pyyaml",
 ]

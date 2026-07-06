@@ -1,6 +1,7 @@
 import argparse
 import collections
 import concurrent.futures
+import functools
 import json
 import pathlib
 
@@ -8,17 +9,23 @@ import boto3
 import botocore
 import botocore.config
 import botocore.exceptions
-import yaml
 
 # This cache is the first link in the DANDI cache chain: it has no upstream `sourcedata` and
 # instead pulls its inputs directly from the public DANDI archive S3 bucket. Each Dandiset
-# version publishes an `assets.yaml` manifest under `dandisets/<dandiset_id>/<version>/`; the
+# version publishes an `assets.jsonld` manifest under `dandisets/<dandiset_id>/<version>/`; the
 # manifest lists every asset with its `path` (within the Dandiset) and its `contentUrl`s (the
 # second of which is the S3 download URL that embeds the content ID).
+#
+# The archive also publishes the same manifest as `assets.yaml`, which is deliberately ignored:
+# JSON parses orders of magnitude faster than YAML (the ~2 GB of YAML across the archive costs
+# the better part of an hour of GIL-bound CPU). Exactly two ancient published versions
+# (000029/0.210712.1903 and 000571/0.250616.1143) have only the YAML manifest; the records
+# unique to them (two in total) were captured by earlier runs and live on in the accumulative
+# cache, so skipping those manifests loses nothing.
 _BUCKET = "dandiarchive"
 _REGION = "us-east-2"
 _ASSETS_PREFIX = "dandisets/"
-_ASSETS_SUFFIX = "/assets.yaml"
+_ASSETS_SUFFIX = "/assets.jsonld"
 
 # Testing mode processes only this many asset entries and writes to its own designated file
 # (`derivatives/testing.jsonl`), leaving the real cache untouched.
@@ -27,14 +34,20 @@ _CACHE_FILE_NAME = "content_id_to_dandiset_paths.jsonl"
 _TESTING_FILE_NAME = "testing.jsonl"
 
 
-def _build_s3_client() -> "botocore.client.BaseClient":
-    # `dandiarchive` is a public bucket, so requests are sent unsigned (anonymous).
-    config = botocore.config.Config(signature_version=botocore.UNSIGNED)
+def _build_s3_client(max_pool_connections: int = 10) -> "botocore.client.BaseClient":
+    # `dandiarchive` is a public bucket, so requests are sent unsigned (anonymous). The
+    # connection pool must hold one connection per download worker, or the surplus workers
+    # redo the TCP/TLS handshake on every request.
+    config = botocore.config.Config(
+        signature_version=botocore.UNSIGNED,
+        max_pool_connections=max_pool_connections,
+        retries={"mode": "standard"},
+    )
     return boto3.client("s3", region_name=_REGION, config=config)
 
 
 def _iter_asset_manifest_keys(s3_client: "botocore.client.BaseClient"):
-    """Yield every `assets.yaml` key under `dandisets/`, in lexicographic (S3 listing) order."""
+    """Yield every `assets.jsonld` key under `dandisets/`, in lexicographic (S3 listing) order."""
     paginator = s3_client.get_paginator("list_objects_v2")
     for page in paginator.paginate(Bucket=_BUCKET, Prefix=_ASSETS_PREFIX):
         for entry in page.get("Contents", []):
@@ -50,13 +63,14 @@ def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[s
         # Embargoed Dandisets list their manifests in the public bucket but deny anonymous reads
         # (AccessDenied); a manifest can also be deleted between listing and fetching (NoSuchKey).
         # Both are expected upstream states, not pipeline failures, so skip the manifest.
-        if error_code in ("AccessDenied", "NoSuchKey", "403", "404"):
+        if error_code in ("AccessDenied", "NoSuchKey"):
             print(f"Skipping inaccessible manifest `{key}` ({error_code}).", flush=True)
             return []
         raise
-    all_asset_metadata = yaml.safe_load(stream=response["Body"].read()) or []
+    body = response["Body"].read()
+    all_asset_metadata = json.loads(body) if body.strip() else []
 
-    # Key layout: `dandisets/<dandiset_id>/<version>/assets.yaml`.
+    # Key layout: `dandisets/<dandiset_id>/<version>/<manifest basename>`.
     dandiset_id = key.split("/")[1]
 
     records: list[tuple[str, str, str]] = []
@@ -87,10 +101,10 @@ def _collect_records(
         return records[:_TESTING_LIMIT]
 
     # Full run: fetch every manifest concurrently and aggregate all asset entries.
-    keys = sorted(_iter_asset_manifest_keys(s3_client))
     records = []
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        for manifest_records in executor.map(lambda key: _get_info(s3_client, key), keys):
+        get_info = functools.partial(_get_info, s3_client)
+        for manifest_records in executor.map(get_info, _iter_asset_manifest_keys(s3_client)):
             records.extend(manifest_records)
     return records
 
@@ -109,7 +123,7 @@ def _load_previous_cache(cache_file_path: pathlib.Path) -> dict[str, dict[str, l
 
 
 def _run(base_directory: pathlib.Path, max_workers: int, testing: bool) -> None:
-    s3_client = _build_s3_client()
+    s3_client = _build_s3_client(max_pool_connections=max_workers)
 
     records = _collect_records(s3_client, max_workers=max_workers, testing=testing)
     if len(records) == 0:
