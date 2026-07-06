@@ -12,6 +12,10 @@
 # it provides Python and a recent git-annex-standalone, which DataLad requires for the annex-backed dataset and its provenance.
 FROM neurodebian:trixie
 
+# The source label associates the image on the GitHub Container Registry with this repository.
+LABEL org.opencontainers.image.source="https://github.com/dandi-cache/content-id-to-dandiset-paths"
+LABEL org.opencontainers.image.description="The pinned runtime environment for the DANDI Cache content-id-to-dandiset-paths update pipeline."
+
 # git-annex (for DataLad / annex provenance), Python, and the basics for cloning and TLS.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \

@@ -54,6 +54,12 @@ If you plan on using this cache regularly, clone the `dist` branch of this repos
 git clone --branch dist https://github.com/dandi-cache/content-id-to-dandiset-paths.git
 ```
 
+Or, if you prefer [DataLad](https://www.datalad.org/):
+
+```bash
+datalad clone https://github.com/dandi-cache/content-id-to-dandiset-paths.git --branch derivatives
+```
+
 Then set up a CRON on your system to pull the latest version of the cache at your desired frequency.
 
 For example, through `crontab -e`, add:
