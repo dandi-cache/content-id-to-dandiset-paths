@@ -1,199 +1,84 @@
-import argparse
+"""Every Dandiset path each content ID is published at.
+
+The archive is content-addressed, so one blob can appear in several Dandisets and under several
+paths within one of them. This cache inverts the archive's own asset manifests into
+`{content_id: {dandiset_id: [paths]}}`, reading them straight from the public bucket.
+
+Every version of every manifest, not only `draft`: an asset a draft has since dropped is still
+part of the published version that holds it, and this cache describes where a content ID *is*
+published rather than only where it is currently drafted.
+
+The cache is accumulative rather than a rebuild, and it accumulates by union rather than by
+replacement. A content ID's paths are added to as they are seen, so a path that disappears
+upstream is retained. Seeding `build` from what is already published is what preserves that.
+
+Everything shared -- the argument parsing, the logging, the output paths, testing mode, the JSON
+Lines writing, the unsigned S3 client, the listing, the manifest reader and the content-ID parse
+-- comes from `dandi_cache_utils`, which the runtime image carries.
+"""
+
 import collections
-import concurrent.futures
-import functools
-import json
-import pathlib
 
-import boto3
-import botocore
-import botocore.config
-import botocore.exceptions
+import dandi_cache_utils as dandi_cache
 
-# This cache is the first link in the DANDI cache chain: it has no upstream `sourcedata` and
-# instead pulls its inputs directly from the public DANDI archive S3 bucket. Each Dandiset
-# version publishes an `assets.jsonld` manifest under `dandisets/<dandiset_id>/<version>/`; the
-# manifest lists every asset with its `path` (within the Dandiset) and its `contentUrl`s (the
-# second of which is the S3 download URL that embeds the content ID).
-#
-# The archive also publishes the same manifest as `assets.yaml`, which is deliberately ignored:
-# JSON parses orders of magnitude faster than YAML (the ~2 GB of YAML across the archive costs
-# the better part of an hour of GIL-bound CPU). Exactly two ancient published versions
-# (000029/0.210712.1903 and 000571/0.250616.1143) have only the YAML manifest; the records
-# unique to them (two in total) were captured by earlier runs and live on in the accumulative
-# cache, so skipping those manifests loses nothing.
-_BUCKET = "dandiarchive"
-_REGION = "us-east-2"
-_ASSETS_PREFIX = "dandisets/"
-_ASSETS_SUFFIX = "/assets.jsonld"
-
-# Testing mode processes only this many asset entries and writes to its own designated file
-# (`derivatives/testing.jsonl`), leaving the real cache untouched.
-_TESTING_LIMIT = 10
-_CACHE_FILE_NAME = "content_id_to_dandiset_paths.jsonl"
-_TESTING_FILE_NAME = "testing.jsonl"
+#: One connection per worker; a smaller pool makes the surplus workers redo the TLS handshake.
+WORKERS = 16
 
 
-def _build_s3_client(max_pool_connections: int = 10) -> "botocore.client.BaseClient":
-    # `dandiarchive` is a public bucket, so requests are sent unsigned (anonymous). The
-    # connection pool must hold one connection per download worker, or the surplus workers
-    # redo the TCP/TLS handshake on every request.
-    config = botocore.config.Config(
-        signature_version=botocore.UNSIGNED,
-        max_pool_connections=max_pool_connections,
-        retries={"mode": "standard"},
-    )
-    return boto3.client("s3", region_name=_REGION, config=config)
+def main() -> None:
+    dataset, arguments = dandi_cache.open_dataset()
+    client = dandi_cache.s3.anonymous_client(max_pool_connections=WORKERS)
 
-
-def _iter_asset_manifest_keys(s3_client: "botocore.client.BaseClient"):
-    """Yield every `assets.jsonld` key under `dandisets/`, in lexicographic (S3 listing) order."""
-    paginator = s3_client.get_paginator("list_objects_v2")
-    for page in paginator.paginate(Bucket=_BUCKET, Prefix=_ASSETS_PREFIX):
-        for entry in page.get("Contents", []):
-            if entry["Key"].endswith(_ASSETS_SUFFIX):
-                yield entry["Key"]
-
-
-def _get_info(s3_client: "botocore.client.BaseClient", key: str) -> list[tuple[str, str, str]]:
-    try:
-        response = s3_client.get_object(Bucket=_BUCKET, Key=key)
-    except botocore.exceptions.ClientError as error:
-        error_code = error.response.get("Error", {}).get("Code", "")
-        # Embargoed Dandisets list their manifests in the public bucket but deny anonymous reads
-        # (AccessDenied); a manifest can also be deleted between listing and fetching (NoSuchKey).
-        # Both are expected upstream states, not pipeline failures, so skip the manifest.
-        if error_code in ("AccessDenied", "NoSuchKey"):
-            print(f"Skipping inaccessible manifest `{key}` ({error_code}).", flush=True)
+    def manifest_records(key: str, /) -> list[tuple[str, str, str]]:
+        """One `(content_id, dandiset_id, path)` per asset in the manifest at `key`."""
+        assets = dandi_cache.s3.dandiset_assets(client, key)
+        if assets is None:
             return []
-        raise
-    body = response["Body"].read()
-    all_asset_metadata = json.loads(body) if body.strip() else []
+        # Key layout: `dandisets/<dandiset_id>/<version>/assets.jsonld`.
+        dandiset_id = key.split("/")[1]
+        return [
+            (dandi_cache.s3.content_id_from_content_urls(asset["contentUrl"]), dandiset_id, asset["path"])
+            for asset in assets
+        ]
 
-    # Key layout: `dandisets/<dandiset_id>/<version>/<manifest basename>`.
-    dandiset_id = key.split("/")[1]
+    def build() -> list[dict]:
+        keys = list(dandi_cache.s3.asset_manifest_keys(client))
+        if dataset.testing:
+            # Enough manifests to exercise the real join without walking the whole bucket.
+            keys = keys[: dandi_cache.TESTING_LIMIT]
 
-    records: list[tuple[str, str, str]] = []
-    for asset_metadata in all_asset_metadata:
-        content_urls = asset_metadata["contentUrl"]
-        s3_download_url = content_urls[1]
-        content_id = s3_download_url.split("/")[-1] if "blobs" in s3_download_url else s3_download_url.split("/")[-2]
+        records = []
+        for manifest in dandi_cache.s3.concurrent_map(manifest_records, keys, max_workers=WORKERS):
+            records.extend(manifest)
+        if not records:
+            message = (
+                f"No asset entries were found under `s3://{dandi_cache.s3.BUCKET}/"
+                f"{dandi_cache.s3.DANDISETS_PREFIX}`. The archive bucket may be unreachable or its "
+                "layout may have changed."
+            )
+            raise RuntimeError(message)
 
-        path_in_dandiset = asset_metadata["path"]
+        # Seeded with what is already published, then unioned with the fresh state, so a path that
+        # has since disappeared upstream is retained rather than dropped.
+        paths_of: dict[str, dict[str, set[str]]] = collections.defaultdict(lambda: collections.defaultdict(set))
+        for content_id, dandiset_paths in dataset.read_output_lookup().items():
+            for dandiset_id, paths in dandiset_paths.items():
+                paths_of[content_id][dandiset_id].update(paths)
+        for content_id, dandiset_id, path in records:
+            paths_of[content_id][dandiset_id].add(path)
 
-        records.append((content_id, dandiset_id, path_in_dandiset))
-
-    return records
-
-
-def _collect_records(
-    s3_client: "botocore.client.BaseClient", max_workers: int, testing: bool
-) -> list[tuple[str, str, str]]:
-    if testing:
-        # Testing run: stream manifests one at a time and stop as soon as `_TESTING_LIMIT`
-        # asset entries have been collected, so the run is fast and does not enumerate the
-        # entire `dandisets/` prefix.
-        records: list[tuple[str, str, str]] = []
-        for key in _iter_asset_manifest_keys(s3_client):
-            records.extend(_get_info(s3_client, key))
-            if len(records) >= _TESTING_LIMIT:
-                break
-        return records[:_TESTING_LIMIT]
-
-    # Full run: fetch every manifest concurrently and aggregate all asset entries.
-    records = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        get_info = functools.partial(_get_info, s3_client)
-        for manifest_records in executor.map(get_info, _iter_asset_manifest_keys(s3_client)):
-            records.extend(manifest_records)
-    return records
-
-
-def _load_previous_cache(cache_file_path: pathlib.Path) -> dict[str, dict[str, list[str]]]:
-    """Read the previous run's cache back into memory (empty on a bootstrap run)."""
-    previous_cache: dict[str, dict[str, list[str]]] = {}
-    if not cache_file_path.exists():
-        return previous_cache
-
-    with cache_file_path.open() as file_stream:
-        for line in file_stream:
-            if stripped_line := line.strip():
-                previous_cache.update(json.loads(stripped_line))
-    return previous_cache
-
-
-def _run(base_directory: pathlib.Path, max_workers: int, testing: bool) -> None:
-    s3_client = _build_s3_client(max_pool_connections=max_workers)
-
-    records = _collect_records(s3_client, max_workers=max_workers, testing=testing)
-    if len(records) == 0:
-        message = (
-            f"\nNo asset entries found under `s3://{_BUCKET}/{_ASSETS_PREFIX}`.\n"
-            "The DANDI archive bucket may be unreachable or its layout may have changed.\n"
-        )
-        raise RuntimeError(message)
-
-    content_id_to_dandiset_paths: dict[str, dict[str, set[str]]] = collections.defaultdict(
-        lambda: collections.defaultdict(set)
-    )
-
-    derivatives_directory = base_directory / "derivatives"
-    derivatives_directory.mkdir(parents=True, exist_ok=True)
-    # Testing runs read from and write to their own designated file, so the real cache is
-    # never touched.
-    output_file_path = derivatives_directory / (_TESTING_FILE_NAME if testing else _CACHE_FILE_NAME)
-
-    # The cache is accumulative: the pipeline runs on a clone of the persistent `derivatives`
-    # branch, so the previous run's cache is already present here. Seed the mapping with it before
-    # folding in the fresh S3 state, so new Dandiset IDs and paths are added when first seen and
-    # entries that have since disappeared upstream are retained for as long as the cache lives.
-    previous_cache = _load_previous_cache(output_file_path)
-    for content_id, dandiset_paths in previous_cache.items():
-        for dandiset_id, paths_in_dandiset in dandiset_paths.items():
-            content_id_to_dandiset_paths[content_id][dandiset_id].update(paths_in_dandiset)
-
-    for content_id, dandiset_id, path_in_dandiset in records:
-        content_id_to_dandiset_paths[content_id][dandiset_id].add(path_in_dandiset)
-
-    # One JSON value per line: `{"<content_id>": {"<dandiset_id>": ["<path>", ...]}}`.
-    with output_file_path.open(mode="w") as file_stream:
-        for content_id in sorted(content_id_to_dandiset_paths):
-            dandiset_paths = content_id_to_dandiset_paths[content_id]
-            record = {
-                content_id: {dandiset_id: sorted(dandiset_paths[dandiset_id]) for dandiset_id in sorted(dandiset_paths)}
+        return [
+            {
+                content_id: {
+                    dandiset_id: sorted(paths_of[content_id][dandiset_id])
+                    for dandiset_id in sorted(paths_of[content_id])
+                }
             }
-            file_stream.write(f"{json.dumps(record)}\n")
+            for content_id in sorted(paths_of)
+        ]
+
+    dandi_cache.run_full_rebuild(dataset, build=build, limit=arguments.limit)
 
 
 if __name__ == "__main__":
-    default_base_directory = pathlib.Path(__file__).parent.parent
-
-    parser = argparse.ArgumentParser(description="Update the content-id-to-dandiset-paths DANDI cache.")
-    parser.add_argument(
-        "--base-directory",
-        type=pathlib.Path,
-        default=default_base_directory,
-        help=(
-            "The directory containing the `derivatives` directory. "
-            "Set to the mounted dataset path when run inside the pipeline container; "
-            "defaults to the repository root."
-        ),
-    )
-    parser.add_argument(
-        "--max-workers",
-        type=int,
-        default=16,
-        help="Number of concurrent S3 download workers used to fetch the asset manifests.",
-    )
-    parser.add_argument(
-        "--testing",
-        action="store_true",
-        help=(
-            f"Run in testing mode: process only the first {_TESTING_LIMIT} asset entries from S3 "
-            f"and read/write `derivatives/{_TESTING_FILE_NAME}` instead of the real cache, "
-            "leaving it untouched. Omit for a complete update."
-        ),
-    )
-    args = parser.parse_args()
-
-    _run(base_directory=args.base_directory, max_workers=args.max_workers, testing=args.testing)
+    main()
