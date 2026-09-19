@@ -1,0 +1,3 @@
+2026-09-19T02:01:49Z INFO Logging to /tmp/logs/update_2026-09-19T02-01-49Z.log.
+2026-09-19T02:01:49Z INFO Update content-id-to-dandiset-paths (base directory /tmp).
+2026-09-19T02:02:16Z INFO Wrote 414350 records to /tmp/derivatives/content_id_to_dandiset_paths.jsonl in 0.4 min (peak memory 1317 MiB).
