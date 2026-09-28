@@ -10,6 +10,10 @@ Updated frequently.
 
 Primarily for use by developers.
 
+A second file, `derivatives/asset_manifest_checked_at.jsonl`, records the UTC date each `assets.jsonld` was last read, keyed by its S3 key.
+It is bookkeeping rather than data, and it encodes one fact about the archive: a published version's manifest is immutable, so it is read once and never again, while `draft` is re-read oldest-first.
+That is what lets a run bound how many manifests it reads without ever re-reading what cannot have changed.
+
 
 
 ## One-time use
