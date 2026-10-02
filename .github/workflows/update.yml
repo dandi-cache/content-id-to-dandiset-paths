@@ -10,7 +10,10 @@ permissions:
 
 on:
   schedule:
-    - cron: "0 0 * * *"  # Daily: a Dandiset can gain, move or drop an asset at any time.
+    # GitHub delays and drops scheduled runs that fall on the hour, so this one runs at a minute of
+    # its own. Every six hours, at the start of each window, since the caches built from this one
+    # run later in it.
+    - cron: "7 */6 * * *"
   workflow_dispatch:
     inputs:
       testing:
