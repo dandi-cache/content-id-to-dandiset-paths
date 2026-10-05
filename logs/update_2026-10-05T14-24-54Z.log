@@ -1,0 +1,4 @@
+2026-10-05T14:24:54Z INFO Logging to /tmp/logs/update_2026-10-05T14-24-54Z.log.
+2026-10-05T14:24:54Z INFO Update content-id-to-dandiset-paths (base directory /tmp).
+2026-10-05T14:24:55Z INFO Reading 1248 of 1880 asset manifests this run.
+2026-10-05T14:25:16Z INFO Wrote 555376 records to /tmp/derivatives/content_id_to_dandiset_paths.jsonl in 0.4 min (peak memory 1634 MiB).
