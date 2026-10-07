@@ -93,7 +93,7 @@ def main() -> None:
         # that has since disappeared upstream -- or a manifest this run did not reach -- is
         # retained rather than dropped.
         paths_of: dict[str, dict[str, set[str]]] = collections.defaultdict(lambda: collections.defaultdict(set))
-        for content_id, dandiset_paths in dataset.read_output_lookup().items():
+        for content_id, dandiset_paths in dataset.read_split_output_lookup(dataset.config.cache_file_name).items():
             for dandiset_id, paths in dandiset_paths.items():
                 paths_of[content_id][dandiset_id].update(paths)
         for content_id, dandiset_id, path in records:
@@ -114,7 +114,8 @@ def main() -> None:
             for content_id in sorted(paths_of)
         ]
 
-    dandi_cache.run_full_rebuild(dataset, build=build)
+    # Split across sixteen files, since as one it would pass GitHub's 100 MiB limit for a file.
+    dandi_cache.run_full_rebuild(dataset, build=build, split=True)
     dataset.write_output_lookup(checked_at, CHECKED_AT)
 
 

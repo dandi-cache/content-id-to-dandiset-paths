@@ -13,10 +13,29 @@ name = "content-id-to-dandiset-paths"
 #   asset_manifest_checked_at     when each `assets.jsonld` was last attempted, keyed by its S3
 #                                 key, which is what orders a bounded run's batch
 #
-# Declaring them here is what publishes both to `dist` and what keeps a `testing_` artifact from
-# reaching consumers.
+# The cache itself is split across sixteen files by the first digit of the content ID,
+# `content_id_to_dandiset_paths_0.jsonl` to `content_id_to_dandiset_paths_f.jsonl`. As one file it
+# grew to within a few MB of GitHub's 100 MiB limit, past which every push is refused.
+#
+# Declaring them here is what publishes all of them to `dist` and what keeps a `testing_` artifact
+# from reaching consumers.
 outputs = [
-    "content_id_to_dandiset_paths.jsonl",
+    "content_id_to_dandiset_paths_0.jsonl",
+    "content_id_to_dandiset_paths_1.jsonl",
+    "content_id_to_dandiset_paths_2.jsonl",
+    "content_id_to_dandiset_paths_3.jsonl",
+    "content_id_to_dandiset_paths_4.jsonl",
+    "content_id_to_dandiset_paths_5.jsonl",
+    "content_id_to_dandiset_paths_6.jsonl",
+    "content_id_to_dandiset_paths_7.jsonl",
+    "content_id_to_dandiset_paths_8.jsonl",
+    "content_id_to_dandiset_paths_9.jsonl",
+    "content_id_to_dandiset_paths_a.jsonl",
+    "content_id_to_dandiset_paths_b.jsonl",
+    "content_id_to_dandiset_paths_c.jsonl",
+    "content_id_to_dandiset_paths_d.jsonl",
+    "content_id_to_dandiset_paths_e.jsonl",
+    "content_id_to_dandiset_paths_f.jsonl",
     "asset_manifest_checked_at.jsonl",
 ]
 
