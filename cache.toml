@@ -20,6 +20,12 @@ outputs = [
     "asset_manifest_checked_at.jsonl",
 ]
 
+# Kept on `derivatives` as sixteen files, `content_id_to_dandiset_paths_0.jsonl` to
+# `content_id_to_dandiset_paths_f.jsonl`, by the first digit of the content ID. As one file it was
+# 102.6 MB, within days of GitHub's 100 MiB limit. `dist` still publishes it as the one
+# `content_id_to_dandiset_paths.jsonl.gz`, so no consumer URL changes.
+split = ["content_id_to_dandiset_paths.jsonl"]
+
 # No `[[inputs]]`: this cache is first in its chain. It reads the DANDI archive's own draft asset
 # manifests over S3 rather than another cache's output, so there is no input subdataset to pin.
 
