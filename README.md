@@ -20,7 +20,6 @@ That is what lets a run bound how many manifests it reads without ever re-readin
 
 `dist` publishes each output as a [Zarr](https://zarr.dev/) store: the cache itself is `derivatives/content_id_to_dandiset_paths.zarr/`, with the cache's other outputs beside it as stores of the same kind (`derivatives/asset_manifest_checked_at.zarr/`).
 A store is one array of [JSON Lines](https://jsonlines.org/) text cut into chunk files, each holding whole lines and gzip-compressed.
-Where a key appears more than once, the last line is its current entry, and the published copy has no repeats.
 It can be read with the standard library alone, or opened remotely with any Zarr library.
 
 ### Python API (recommended)
