@@ -1,4 +1,4 @@
 [submodule "workspace"]
 	path = workspace
-	url = .
+	url = ../content-id-to-dandiset-paths.git
 	datalad-url = https://github.com/dandi-cache/content-id-to-dandiset-paths.git
