@@ -110,3 +110,24 @@ import gzip, json, pathlib
 chunks = sorted(pathlib.Path("content-id-to-dandiset-paths/derivatives/content_id_to_dandiset_paths.zarr/stream/c").iterdir(), key=lambda path: int(path.name))
 content_id_to_dandiset_paths = {key: value for chunk in chunks for line in gzip.decompress(chunk.read_bytes()).decode().splitlines() if line for key, value in json.loads(line).items()}
 ```
+
+
+## Reading the `derivatives` branch
+
+Each output is kept on the `derivatives` branch as a [Zarr](https://zarr.dev/) v3 store of JSON Lines: a one-dimensional `uint8` array whose bytes are the lines, padded with newlines to the end of its last chunk.
+A key recorded more than once keeps its last line, which the dictionary below does by itself.
+
+```python
+import json
+
+import zarr  # zarr>=3, with fsspec and aiohttp to read over HTTP
+
+url = "https://raw.githubusercontent.com/dandi-cache/content-id-to-dandiset-paths/derivatives/derivatives/content_id_to_dandiset_paths.zarr"
+stream = zarr.open_group(url, mode="r")["stream"]
+lines = stream[:].tobytes().decode("utf-8").splitlines()
+content_id_to_dandiset_paths = {key: value for line in lines if line for key, value in json.loads(line).items()}
+```
+
+The other output, `asset_manifest_checked_at.zarr`, is a store beside it under the same `derivatives/` path.
+
+Without Zarr, each chunk is a plain file of whole lines at `derivatives/content_id_to_dandiset_paths.zarr/stream/c/<n>`, read in order of `n`.
